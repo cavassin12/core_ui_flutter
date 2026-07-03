@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 
 /// 1. A classe que define as cores e variáveis do seu pacote
-class MeuDesignSystemTheme extends ThemeExtension<MeuDesignSystemTheme> {
+class CoreDesignSystemTheme extends ThemeExtension<CoreDesignSystemTheme> {
   final Color corPrimaria;
   final Color corFundo;
   final double raioBorda;
 
-  const MeuDesignSystemTheme({
+  const CoreDesignSystemTheme({
     required this.corPrimaria,
     required this.corFundo,
     required this.raioBorda,
   });
 
   @override
-  ThemeExtension<MeuDesignSystemTheme> copyWith({
+  ThemeExtension<CoreDesignSystemTheme> copyWith({
     Color? corPrimaria,
     Color? corFundo,
     double? raioBorda,
   }) {
-    return MeuDesignSystemTheme(
+    return CoreDesignSystemTheme(
       corPrimaria: corPrimaria ?? this.corPrimaria,
       corFundo: corFundo ?? this.corFundo,
       raioBorda: raioBorda ?? this.raioBorda,
@@ -26,12 +26,12 @@ class MeuDesignSystemTheme extends ThemeExtension<MeuDesignSystemTheme> {
   }
 
   @override
-  ThemeExtension<MeuDesignSystemTheme> lerp(
-    covariant ThemeExtension<MeuDesignSystemTheme>? other,
+  ThemeExtension<CoreDesignSystemTheme> lerp(
+    covariant ThemeExtension<CoreDesignSystemTheme>? other,
     double t,
   ) {
-    if (other is! MeuDesignSystemTheme) return this;
-    return MeuDesignSystemTheme(
+    if (other is! CoreDesignSystemTheme) return this;
+    return CoreDesignSystemTheme(
       corPrimaria: Color.lerp(corPrimaria, other.corPrimaria, t) ?? corPrimaria,
       corFundo: Color.lerp(corFundo, other.corFundo, t) ?? corFundo,
       raioBorda: lerpDouble(raioBorda, other.raioBorda, t) ?? raioBorda,
@@ -49,11 +49,11 @@ double? lerpDouble(num? a, num? b, double t) {
 
 /// 2. O "Truque" Mágico para facilitar o uso nos seus widgets
 extension MeuDesignSystemContextX on BuildContext {
-  MeuDesignSystemTheme get design {
+  CoreDesignSystemTheme get design {
     // Tenta pegar o tema injetado pelo app.
     // Se o app esquecer de injetar, retorna um valor padrão para não quebrar a tela.
-    return Theme.of(this).extension<MeuDesignSystemTheme>() ??
-        const MeuDesignSystemTheme(
+    return Theme.of(this).extension<CoreDesignSystemTheme>() ??
+        const CoreDesignSystemTheme(
           corPrimaria: Colors.blue,
           corFundo: Colors.white,
           raioBorda: 8.0,
