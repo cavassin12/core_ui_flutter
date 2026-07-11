@@ -1,7 +1,7 @@
 name: core_ui_flutter
 description: "Pacote para criação de um core UI para Flutter"
-version: 0.0.1
-homepage:
+version: 1.1.1
+homepage: https://vandecavassin.com.br
 
 environment:
   sdk: ^3.12.2
