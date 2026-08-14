@@ -7,6 +7,7 @@ export 'components/input_default.dart';
 export 'components/select_default.dart';
 export 'components/snackbar_default.dart';
 export 'components/table_grid.dart';
+export 'components/toggle_switch_default.dart';
 export 'core/date_utils.dart';
 export 'core/platform_widget.dart';
 export 'models/snackbar/content_type.dart';
