@@ -3,6 +3,7 @@ export 'components/accordion_default.dart';
 export 'components/button_default.dart';
 export 'components/checkbox_default.dart';
 export 'components/dialog_default.dart';
+export 'components/grid_default.dart';
 export 'components/icone_default_component.dart';
 export 'components/input_default.dart';
 export 'components/select_default.dart';
