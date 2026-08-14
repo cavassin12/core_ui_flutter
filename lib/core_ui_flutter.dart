@@ -1,6 +1,7 @@
 export 'code_design_system_theme.dart';
 export 'components/accordion_default.dart';
 export 'components/button_default.dart';
+export 'components/card_default.dart';
 export 'components/checkbox_default.dart';
 export 'components/dialog_default.dart';
 export 'components/grid_default.dart';
