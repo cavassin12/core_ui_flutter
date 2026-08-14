@@ -1,4 +1,5 @@
 export 'code_design_system_theme.dart';
+export 'components/accordion_default.dart';
 export 'components/button_default.dart';
 export 'components/checkbox_default.dart';
 export 'components/dialog_default.dart';
@@ -6,6 +7,7 @@ export 'components/icone_default_component.dart';
 export 'components/input_default.dart';
 export 'components/select_default.dart';
 export 'components/snackbar_default.dart';
+export 'components/tab_container_default.dart';
 export 'components/table_grid.dart';
 export 'components/toggle_switch_default.dart';
 export 'core/date_utils.dart';
