@@ -1,8 +1,10 @@
+import 'package:core_ui_flutter/components/icone_default_component.dart';
+import 'package:core_ui_flutter/core/platform_widget.dart';
+import 'package:core_ui_flutter/types/button_severity.dart';
+import 'package:core_ui_flutter/types/icones_default.dart';
+import 'package:core_ui_flutter/types/tipo_botao.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-import 'platform_widget.dart';
 
 class ButtonDefault extends PlatformWidget {
   static const double _alturaPadrao = 30.0;
@@ -104,7 +106,6 @@ class ButtonDefault extends PlatformWidget {
       case ButtonSeverity.secondary:
         return theme.colorScheme.secondary;
       case ButtonSeverity.primary:
-      default:
         return theme.colorScheme.primary;
     }
   }
@@ -134,7 +135,7 @@ class ButtonDefault extends PlatformWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         if (icone != null || iconeDefault != null) ...[
           IconeDefaultComponent(
@@ -176,7 +177,7 @@ class ButtonDefault extends PlatformWidget {
       width: largura,
       height: heightResolved,
       child: Material(
-        color: disabled ? bgColor.withOpacity(0.5) : bgColor,
+        color: disabled ? bgColor.withValues(alpha: 0.5) : bgColor,
         borderRadius: BorderRadius.circular(isSmall ? 4.0 : 6.0),
         elevation: 0,
         child: InkWell(
@@ -186,7 +187,7 @@ class ButtonDefault extends PlatformWidget {
             padding: EdgeInsets.symmetric(horizontal: isSmall ? 8.0 : 12.0),
             child: Center(
               child: _buildContent(
-                disabled ? textColor.withOpacity(0.6) : textColor,
+                disabled ? textColor.withValues(alpha: 0.6) : textColor,
               ),
             ),
           ),
@@ -207,11 +208,11 @@ class ButtonDefault extends PlatformWidget {
       child: CupertinoButton(
         padding: EdgeInsets.symmetric(horizontal: isSmall ? 8.0 : 12.0),
         color: bgColor,
-        disabledColor: bgColor.withOpacity(0.4),
+        disabledColor: bgColor.withValues(alpha: 0.4),
         borderRadius: BorderRadius.circular(isSmall ? 6.0 : 8.0),
-        minSize: heightResolved ?? 30.0,
+        minimumSize: Size(0, heightResolved ?? 30.0),
         onPressed: disabled ? null : _handleTap,
-        child: _buildContent(disabled ? textColor.withOpacity(0.5) : textColor),
+        child: _buildContent(disabled ? textColor.withValues(alpha: 0.5) : textColor),
       ),
     );
   }
@@ -230,18 +231,18 @@ class ButtonDefault extends PlatformWidget {
             ? SystemMouseCursors.forbidden
             : SystemMouseCursors.click,
         child: Material(
-          color: disabled ? bgColor.withOpacity(0.4) : bgColor,
+          color: disabled ? bgColor.withValues(alpha: 0.4) : bgColor,
           borderRadius: BorderRadius.circular(4.0),
           child: InkWell(
             onTap: disabled ? null : _handleTap,
-            hoverColor: Colors.white.withOpacity(0.12),
-            splashColor: Colors.white.withOpacity(0.2),
+            hoverColor: Colors.white.withValues(alpha: 0.12),
+            splashColor: Colors.white.withValues(alpha: 0.2),
             borderRadius: BorderRadius.circular(4.0),
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: isSmall ? 10.0 : 14.0),
               child: Center(
                 child: _buildContent(
-                  disabled ? textColor.withOpacity(0.5) : textColor,
+                  disabled ? textColor.withValues(alpha: 0.5) : textColor,
                 ),
               ),
             ),
@@ -261,26 +262,26 @@ class ButtonDefault extends PlatformWidget {
       width: largura,
       height: heightResolved,
       child: Material(
-        color: disabled ? bgColor.withOpacity(0.35) : bgColor,
+        color: disabled ? bgColor.withValues(alpha: 0.35) : bgColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(4.0),
           side: BorderSide(
             color: disabled
                 ? Colors.transparent
-                : Colors.black.withOpacity(0.08),
+                : Colors.black.withValues(alpha: 0.08),
             width: 1,
           ),
         ),
         child: InkWell(
           onTap: disabled ? null : _handleTap,
-          hoverColor: Colors.white.withOpacity(0.15),
-          focusColor: Colors.black.withOpacity(0.05),
+          hoverColor: Colors.white.withValues(alpha: 0.15),
+          focusColor: Colors.black.withValues(alpha: 0.05),
           borderRadius: BorderRadius.circular(4.0),
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: isSmall ? 10.0 : 12.0),
             child: Center(
               child: _buildContent(
-                disabled ? textColor.withOpacity(0.4) : textColor,
+                disabled ? textColor.withValues(alpha: 0.4) : textColor,
               ),
             ),
           ),

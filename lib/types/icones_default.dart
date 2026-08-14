@@ -72,7 +72,7 @@ String normalizarIdentificadorLucide(String identificador) {
 }
 
 /// Converte Strings Hexadecimal ('#FFFFFF', '#FFF', '0xFFFFFFFF') ou Color para `Color` do Flutter
-Color? _parseColor(dynamic corInput, BuildContext context) {
+Color? parseIconColor(dynamic corInput, BuildContext context) {
   if (corInput is Color) return corInput;
   if (corInput is! String) return null;
 
@@ -99,7 +99,7 @@ Color? _parseColor(dynamic corInput, BuildContext context) {
 }
 
 /// Converte dynamic (String, int, double) para o valor do tamanho do ícone
-double _parseSize(dynamic tamanho) {
+double parseIconSize(dynamic tamanho) {
   if (tamanho is double) return tamanho;
   if (tamanho is int) return tamanho.toDouble();
   if (tamanho is String) {
@@ -112,7 +112,7 @@ double _parseSize(dynamic tamanho) {
 // MAPA DE ÍCONES LUCIDE
 // =============================================================================
 
-final Map<String, IconData> _iconesLucideMap = {
+final Map<String, IconData> iconesLucideMap = {
   'arrow-down': LucideIcons.arrowDown,
   'arrow-left': LucideIcons.arrowLeft,
   'arrow-left-right': LucideIcons.arrowLeftRight,

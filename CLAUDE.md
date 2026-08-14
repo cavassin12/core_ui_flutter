@@ -19,7 +19,7 @@ Não há etapa de build/run — este pacote não possui um app de exemplo; ele �
 
 ### Widgets adaptativos via `PlatformWidget`
 
-`lib/core/PlatformWidget.dart` define uma classe base abstrata que todos os componentes adaptativos por plataforma devem estender. Ela centraliza a lógica de ramificação por plataforma para que os widgets individuais nunca precisem fazer checagens como `if (Platform.isIOS)` por conta própria:
+`lib/core/platform_widget.dart` define uma classe base abstrata que todos os componentes adaptativos por plataforma devem estender. Ela centraliza a lógica de ramificação por plataforma para que os widgets individuais nunca precisem fazer checagens como `if (Platform.isIOS)` por conta própria:
 
 - `createIosWidget` e `createAndroidWidget` são overrides **obrigatórios**.
 - `createWebWidget` e `createWindowsWidget` são overrides opcionais que **usam `createAndroidWidget` como padrão** caso não sejam sobrescritos.
@@ -41,4 +41,4 @@ Ao adicionar um novo token de design: adicione o campo em `CoreDesignSystemTheme
 
 ### Padrão de componente
 
-Veja `lib/components/MeuBotaoPrimario.dart` como implementação de referência: ele estende `PlatformWidget`, obtém os tokens de `context.design` (ex.: `corPrimaria`, `raioBorda`) dentro de cada builder específico de plataforma, e só sobrescreve `createWebWidget` quando a experiência web realmente precisa ser diferente (ex.: áreas de toque maiores, cursor de hover) — caso contrário, a implementação Android é reaproveitada automaticamente.
+Veja `lib/components/meu_botao_primario.dart` como implementação de referência: ele estende `PlatformWidget`, obtém os tokens de `context.design` (ex.: `corPrimaria`, `raioBorda`) dentro de cada builder específico de plataforma, e só sobrescreve `createWebWidget` quando a experiência web realmente precisa ser diferente (ex.: áreas de toque maiores, cursor de hover) — caso contrário, a implementação Android é reaproveitada automaticamente.

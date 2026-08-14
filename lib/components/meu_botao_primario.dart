@@ -1,4 +1,4 @@
-import 'package:core_ui_flutter/core/PlatformWidget.dart';
+import 'package:core_ui_flutter/core/platform_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
