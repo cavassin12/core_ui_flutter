@@ -6,10 +6,27 @@ class CoreDesignSystemTheme extends ThemeExtension<CoreDesignSystemTheme> {
   final Color corFundo;
   final double raioBorda;
 
+  /// Borda de cards/tabelas (equivalente a `--pd-border` no Angular).
+  final Color corBorda;
+
+  /// Fundo do cabeçalho de tabelas (equivalente a `--pd-component-header-bg`).
+  final Color corCabecalhoTabela;
+
+  /// Fundo de uma linha de tabela selecionada (equivalente a `--pd-item-selected-bg`).
+  final Color corLinhaSelecionada;
+
+  /// Fundo de uma linha de tabela em hover — só relevante em plataformas com mouse
+  /// (equivalente a `--pd-item-hover-bg`).
+  final Color corLinhaHover;
+
   const CoreDesignSystemTheme({
     required this.corPrimaria,
     required this.corFundo,
     required this.raioBorda,
+    this.corBorda = const Color(0xFFE2E8F0),
+    this.corCabecalhoTabela = const Color(0xFFF8FAFC),
+    this.corLinhaSelecionada = const Color(0xFFDCE9FB),
+    this.corLinhaHover = const Color(0xFFF1F5F9),
   });
 
   @override
@@ -17,11 +34,19 @@ class CoreDesignSystemTheme extends ThemeExtension<CoreDesignSystemTheme> {
     Color? corPrimaria,
     Color? corFundo,
     double? raioBorda,
+    Color? corBorda,
+    Color? corCabecalhoTabela,
+    Color? corLinhaSelecionada,
+    Color? corLinhaHover,
   }) {
     return CoreDesignSystemTheme(
       corPrimaria: corPrimaria ?? this.corPrimaria,
       corFundo: corFundo ?? this.corFundo,
       raioBorda: raioBorda ?? this.raioBorda,
+      corBorda: corBorda ?? this.corBorda,
+      corCabecalhoTabela: corCabecalhoTabela ?? this.corCabecalhoTabela,
+      corLinhaSelecionada: corLinhaSelecionada ?? this.corLinhaSelecionada,
+      corLinhaHover: corLinhaHover ?? this.corLinhaHover,
     );
   }
 
@@ -35,6 +60,12 @@ class CoreDesignSystemTheme extends ThemeExtension<CoreDesignSystemTheme> {
       corPrimaria: Color.lerp(corPrimaria, other.corPrimaria, t) ?? corPrimaria,
       corFundo: Color.lerp(corFundo, other.corFundo, t) ?? corFundo,
       raioBorda: lerpDouble(raioBorda, other.raioBorda, t) ?? raioBorda,
+      corBorda: Color.lerp(corBorda, other.corBorda, t) ?? corBorda,
+      corCabecalhoTabela:
+          Color.lerp(corCabecalhoTabela, other.corCabecalhoTabela, t) ?? corCabecalhoTabela,
+      corLinhaSelecionada:
+          Color.lerp(corLinhaSelecionada, other.corLinhaSelecionada, t) ?? corLinhaSelecionada,
+      corLinhaHover: Color.lerp(corLinhaHover, other.corLinhaHover, t) ?? corLinhaHover,
     );
   }
 }
