@@ -54,10 +54,10 @@ class CheckboxDefault extends StatefulWidget {
   final bool isRound;
 
   @override
-  _RoundCheckBoxState createState() => _RoundCheckBoxState();
+  _CheckboxDefaultState createState() => _CheckboxDefaultState();
 }
 
-class _RoundCheckBoxState extends State<CheckboxDefault> {
+class _CheckboxDefaultState extends State<CheckboxDefault> {
   bool? isChecked;
   late Duration animationDuration;
   double? size;
