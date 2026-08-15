@@ -1,12 +1,9 @@
 import 'package:core_ui_flutter/code_design_system_theme.dart';
 import 'package:core_ui_flutter/core/platform_widget.dart';
+import 'package:core_ui_flutter/types/dialog_tamanho.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-/// Tamanhos disponíveis para o [DialogDefault], equivalentes às classes
-/// `modal-sm`, `modal-lg`, `modal-xl` e `modal-fullscreen` do Modal do Bootstrap.
-enum DialogTamanho { pequeno, medio, grande, extraGrande, telaCheia }
 
 /// Componente único de dialog/modal do design system, reproduzindo as
 /// opções do Modal do Bootstrap (tamanho, centralização, rolagem, backdrop

@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-import 'type_colunm.dart';
+import '../types/type_colunm.dart';
 
 /// Porte de `DynamicColumnDTO` (core/commom-views/tablegrid/DynamicColumnDTO.ts).
 ///
