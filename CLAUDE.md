@@ -37,8 +37,8 @@ Ao adicionar um novo token de design: adicione o campo em `CoreDesignSystemTheme
 
 ### Superfície de exports do pacote
 
-`lib/core_ui_flutter.dart` é o único ponto de entrada público que os apps importam. **Todo novo componente público ou classe de tema deve ser exportado aqui** para poder ser usado fora do pacote — atualmente este arquivo só exporta uma classe placeholder `Calculator` e precisa ser atualizado conforme componentes reais forem adicionados (componentes já existentes como `MeuBotaoPrimario` ainda não estão exportados).
+`lib/core_ui_flutter.dart` é o único ponto de entrada público que os apps importam. **Todo novo componente público ou classe de tema deve ser exportado aqui** para poder ser usado fora do pacote. Todos os componentes atuais em `lib/components/` (accordion, button, card, checkbox, dialog, grid, icone, input, select, snackbar, tab_container, table_grid, toggle_switch) já estão exportados.
 
 ### Padrão de componente
 
-Veja `lib/components/meu_botao_primario.dart` como implementação de referência: ele estende `PlatformWidget`, obtém os tokens de `context.design` (ex.: `corPrimaria`, `raioBorda`) dentro de cada builder específico de plataforma, e só sobrescreve `createWebWidget` quando a experiência web realmente precisa ser diferente (ex.: áreas de toque maiores, cursor de hover) — caso contrário, a implementação Android é reaproveitada automaticamente.
+Veja `lib/components/button_default.dart` como implementação de referência: ele estende `PlatformWidget`, obtém os tokens de `context.design` (ex.: `corPrimaria`, `raioBorda`) dentro de cada builder específico de plataforma, e só sobrescreve `createWebWidget` quando a experiência web realmente precisa ser diferente (ex.: áreas de toque maiores, cursor de hover) — caso contrário, a implementação Android é reaproveitada automaticamente.
