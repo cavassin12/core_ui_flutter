@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
-class CheckboxDefault extends StatefulWidget {
+import '../core/platform_widget.dart';
+
+class CheckboxDefault extends PlatformWidget {
   const CheckboxDefault({
-    Key? key,
+    super.key,
     this.isChecked,
     this.checkedWidget,
     this.uncheckedWidget,
@@ -15,7 +17,7 @@ class CheckboxDefault extends StatefulWidget {
     this.animationDuration,
     this.isRound = true,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   ///Define wether the checkbox is marked or not
   final bool? isChecked;
@@ -53,11 +55,29 @@ class CheckboxDefault extends StatefulWidget {
 
   final bool isRound;
 
+  // Um checkbox não tem uma variação visual nativa relevante entre
+  // plataformas — a mesma implementação é usada em todas.
   @override
-  _CheckboxDefaultState createState() => _CheckboxDefaultState();
+  Widget createAndroidWidget(BuildContext context) => _CheckboxDefaultBase(parent: this);
+
+  @override
+  Widget createIosWidget(BuildContext context) => _CheckboxDefaultBase(parent: this);
 }
 
-class _CheckboxDefaultState extends State<CheckboxDefault> {
+// =============================================================================
+// IMPLEMENTAÇÃO ESTADUALIZADA INTERNA
+// =============================================================================
+
+class _CheckboxDefaultBase extends StatefulWidget {
+  final CheckboxDefault parent;
+
+  const _CheckboxDefaultBase({required this.parent});
+
+  @override
+  State<_CheckboxDefaultBase> createState() => _CheckboxDefaultBaseState();
+}
+
+class _CheckboxDefaultBaseState extends State<_CheckboxDefaultBase> {
   bool? isChecked;
   late Duration animationDuration;
   double? size;
@@ -70,55 +90,55 @@ class _CheckboxDefaultState extends State<CheckboxDefault> {
 
   @override
   void initState() {
-    isChecked = widget.isChecked ?? false;
-    animationDuration = widget.animationDuration ?? Duration(milliseconds: 500);
-    size = widget.size ?? 40.0;
-    checkedColor = widget.checkedColor ?? Colors.green;
-    uncheckedColor = widget.uncheckedColor;
-    borderColor = widget.borderColor ?? Colors.grey;
+    isChecked = widget.parent.isChecked ?? false;
+    animationDuration = widget.parent.animationDuration ?? Duration(milliseconds: 500);
+    size = widget.parent.size ?? 40.0;
+    checkedColor = widget.parent.checkedColor ?? Colors.green;
+    uncheckedColor = widget.parent.uncheckedColor;
+    borderColor = widget.parent.borderColor ?? Colors.grey;
     checkedWidget =
-        widget.checkedWidget ?? Icon(Icons.check, color: Colors.white);
-    uncheckedWidget = widget.uncheckedWidget ?? const SizedBox.shrink();
+        widget.parent.checkedWidget ?? Icon(Icons.check, color: Colors.white);
+    uncheckedWidget = widget.parent.uncheckedWidget ?? const SizedBox.shrink();
     super.initState();
   }
 
   @override
-  void didUpdateWidget(CheckboxDefault oldWidget) {
+  void didUpdateWidget(_CheckboxDefaultBase oldWidget) {
     uncheckedColor =
-        widget.uncheckedColor ?? Theme.of(context).scaffoldBackgroundColor;
-    if (isChecked != widget.isChecked) {
-      isChecked = widget.isChecked ?? false;
+        widget.parent.uncheckedColor ?? Theme.of(context).scaffoldBackgroundColor;
+    if (isChecked != widget.parent.isChecked) {
+      isChecked = widget.parent.isChecked ?? false;
     }
-    if (animationDuration != widget.animationDuration) {
+    if (animationDuration != widget.parent.animationDuration) {
       animationDuration =
-          widget.animationDuration ?? Duration(milliseconds: 500);
+          widget.parent.animationDuration ?? Duration(milliseconds: 500);
     }
-    if (size != widget.size) {
-      size = widget.size ?? 40.0;
+    if (size != widget.parent.size) {
+      size = widget.parent.size ?? 40.0;
     }
-    if (checkedColor != widget.checkedColor) {
-      checkedColor = widget.checkedColor ?? Colors.green;
+    if (checkedColor != widget.parent.checkedColor) {
+      checkedColor = widget.parent.checkedColor ?? Colors.green;
     }
-    if (borderColor != widget.borderColor) {
-      borderColor = widget.borderColor ?? Colors.grey;
+    if (borderColor != widget.parent.borderColor) {
+      borderColor = widget.parent.borderColor ?? Colors.grey;
     }
-    if (checkedWidget != widget.checkedWidget) {
+    if (checkedWidget != widget.parent.checkedWidget) {
       checkedWidget =
-          widget.checkedWidget ?? Icon(Icons.check, color: Colors.white);
+          widget.parent.checkedWidget ?? Icon(Icons.check, color: Colors.white);
     }
-    if (uncheckedWidget != widget.uncheckedWidget) {
-      uncheckedWidget = widget.uncheckedWidget ?? const SizedBox.shrink();
+    if (uncheckedWidget != widget.parent.uncheckedWidget) {
+      uncheckedWidget = widget.parent.uncheckedWidget ?? const SizedBox.shrink();
     }
     super.didUpdateWidget(oldWidget);
   }
 
   @override
   Widget build(BuildContext context) {
-    return widget.onTap != null
+    return widget.parent.onTap != null
         ? GestureDetector(
             onTap: () {
               setState(() => isChecked = !isChecked!);
-              widget.onTap!(isChecked);
+              widget.parent.onTap!(isChecked);
             },
             child: ClipRRect(
               borderRadius: borderRadius,
@@ -128,7 +148,7 @@ class _CheckboxDefaultState extends State<CheckboxDefault> {
                 width: size,
                 decoration: BoxDecoration(
                   color: isChecked! ? checkedColor : uncheckedColor,
-                  border: widget.border ?? Border.all(color: borderColor),
+                  border: widget.parent.border ?? Border.all(color: borderColor),
                   borderRadius: borderRadius,
                 ),
                 child: isChecked! ? checkedWidget : uncheckedWidget,
@@ -142,12 +162,12 @@ class _CheckboxDefaultState extends State<CheckboxDefault> {
               height: size,
               width: size,
               decoration: BoxDecoration(
-                color: widget.disabledColor ?? Theme.of(context).disabledColor,
+                color: widget.parent.disabledColor ?? Theme.of(context).disabledColor,
                 border:
-                    widget.border ??
+                    widget.parent.border ??
                     Border.all(
                       color:
-                          widget.disabledColor ??
+                          widget.parent.disabledColor ??
                           Theme.of(context).disabledColor,
                     ),
                 borderRadius: borderRadius,
@@ -158,7 +178,7 @@ class _CheckboxDefaultState extends State<CheckboxDefault> {
   }
 
   BorderRadius get borderRadius {
-    if (widget.isRound) {
+    if (widget.parent.isRound) {
       return BorderRadius.circular(size! / 2);
     } else {
       return BorderRadius.zero;

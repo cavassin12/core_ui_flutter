@@ -1,4 +1,5 @@
 import 'package:core_ui_flutter/code_design_system_theme.dart';
+import 'package:core_ui_flutter/core/platform_widget.dart';
 import 'package:flutter/material.dart';
 
 /// Componente único de card do design system, com o mesmo comportamento do
@@ -21,7 +22,7 @@ import 'package:flutter/material.dart';
 ///   ],
 /// )
 /// ```
-class CardDefault extends StatelessWidget {
+class CardDefault extends PlatformWidget {
   /// Imagem exibida no topo do card, ocupando toda a largura (equivalente a
   /// `card-img-top`). Em [horizontal], é exibida na lateral esquerda.
   final Widget? imagemTopo;
@@ -318,8 +319,7 @@ class CardDefault extends StatelessWidget {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _build(BuildContext context) {
     final design = context.design;
     final corFundoResolvida = corFundo ?? design.corFundo;
     final corBordaResolvida = corBorda ?? design.corBorda;
@@ -361,4 +361,12 @@ class CardDefault extends StatelessWidget {
 
     return card;
   }
+
+  // Um card não tem uma variação visual nativa relevante entre plataformas —
+  // a mesma implementação é usada em todas.
+  @override
+  Widget createAndroidWidget(BuildContext context) => _build(context);
+
+  @override
+  Widget createIosWidget(BuildContext context) => _build(context);
 }

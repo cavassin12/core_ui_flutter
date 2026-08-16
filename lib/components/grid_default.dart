@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../core/platform_widget.dart';
 import '../types/grid_quebra.dart';
 
 const List<GridQuebra> _ordemQuebrasDecrescente = [
@@ -40,7 +41,7 @@ T? _cascataMobileFirst<T>(GridQuebra quebra, Map<GridQuebra, T?> valores) {
 /// Os parâmetros seguem a filosofia *mobile-first* do Bootstrap: um valor
 /// definido em um breakpoint vale também para os breakpoints maiores, até
 /// ser sobrescrito por um valor mais específico.
-class GridColuna extends StatelessWidget {
+class GridColuna extends PlatformWidget {
   /// Conteúdo da coluna.
   final Widget filho;
 
@@ -156,8 +157,13 @@ class GridColuna extends StatelessWidget {
       }) ??
       0;
 
+  // Uma coluna do grid não tem uma variação visual nativa relevante entre
+  // plataformas — a mesma implementação (o próprio filho) é usada em todas.
   @override
-  Widget build(BuildContext context) => filho;
+  Widget createAndroidWidget(BuildContext context) => filho;
+
+  @override
+  Widget createIosWidget(BuildContext context) => filho;
 }
 
 class _ColunaResolvida {
@@ -183,7 +189,7 @@ class _ColunaResolvida {
 ///   ],
 /// )
 /// ```
-class GridLinha extends StatelessWidget {
+class GridLinha extends PlatformWidget {
   /// Widgets da linha — idealmente [GridColuna]s. Widgets que não sejam
   /// [GridColuna] são tratados como uma coluna automática (`.col`).
   final List<Widget> filhos;
@@ -301,8 +307,7 @@ class GridLinha extends StatelessWidget {
     return linhaWidget;
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
         final largura = constraints.maxWidth;
@@ -341,4 +346,12 @@ class GridLinha extends StatelessWidget {
       },
     );
   }
+
+  // Uma linha do grid não tem uma variação visual nativa relevante entre
+  // plataformas — a mesma implementação é usada em todas.
+  @override
+  Widget createAndroidWidget(BuildContext context) => _build(context);
+
+  @override
+  Widget createIosWidget(BuildContext context) => _build(context);
 }

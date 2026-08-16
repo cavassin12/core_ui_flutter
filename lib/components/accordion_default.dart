@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../core/platform_widget.dart';
 import '../models/accordion_item.dart';
 import '../types/accordion_feedback_haptico.dart';
 import '../types/accordion_rolagem.dart';
@@ -26,7 +27,7 @@ import '../types/accordion_rolagem.dart';
 ///   ],
 /// )
 /// ```
-class AccordionDefault extends StatefulWidget {
+class AccordionDefault extends PlatformWidget {
   /// Seções exibidas pelo acordeão, na ordem desejada.
   final List<AccordionItem> itens;
 
@@ -170,11 +171,31 @@ class AccordionDefault extends StatefulWidget {
     this.feedbackHapticoAoFechar = AccordionFeedbackHaptico.nenhum,
   }) : assert(maximoSecoesAbertas > 0, 'maximoSecoesAbertas deve ser >= 1');
 
+  // Um acordeão tem aparência única, sem variação por plataforma — a mesma
+  // implementação é usada em todas.
   @override
-  State<AccordionDefault> createState() => _AccordionDefaultState();
+  Widget createAndroidWidget(BuildContext context) =>
+      _AccordionDefaultBase(parent: this);
+
+  @override
+  Widget createIosWidget(BuildContext context) =>
+      _AccordionDefaultBase(parent: this);
 }
 
-class _AccordionDefaultState extends State<AccordionDefault> {
+// =============================================================================
+// IMPLEMENTAÇÃO ESTADUALIZADA INTERNA
+// =============================================================================
+
+class _AccordionDefaultBase extends StatefulWidget {
+  final AccordionDefault parent;
+
+  const _AccordionDefaultBase({required this.parent});
+
+  @override
+  State<_AccordionDefaultBase> createState() => _AccordionDefaultBaseState();
+}
+
+class _AccordionDefaultBaseState extends State<_AccordionDefaultBase> {
   final Set<int> _abertos = {};
   final List<int> _ordemAbertura = [];
   List<GlobalKey> _chaves = [];
@@ -182,24 +203,24 @@ class _AccordionDefaultState extends State<AccordionDefault> {
   @override
   void initState() {
     super.initState();
-    _chaves = List.generate(widget.itens.length, (_) => GlobalKey());
+    _chaves = List.generate(widget.parent.itens.length, (_) => GlobalKey());
     _abrirSecoesIniciais();
   }
 
   @override
-  void didUpdateWidget(covariant AccordionDefault oldWidget) {
+  void didUpdateWidget(covariant _AccordionDefaultBase oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.itens.length != widget.itens.length) {
-      _chaves = List.generate(widget.itens.length, (_) => GlobalKey());
-      _abertos.removeWhere((index) => index >= widget.itens.length);
-      _ordemAbertura.removeWhere((index) => index >= widget.itens.length);
+    if (oldWidget.parent.itens.length != widget.parent.itens.length) {
+      _chaves = List.generate(widget.parent.itens.length, (_) => GlobalKey());
+      _abertos.removeWhere((index) => index >= widget.parent.itens.length);
+      _ordemAbertura.removeWhere((index) => index >= widget.parent.itens.length);
     }
   }
 
   void _abrirSecoesIniciais() {
     final indicesIniciais = <int>[
-      for (var i = 0; i < widget.itens.length; i++)
-        if (widget.itens[i].abertoInicialmente) i,
+      for (var i = 0; i < widget.parent.itens.length; i++)
+        if (widget.parent.itens[i].abertoInicialmente) i,
     ];
     if (indicesIniciais.isEmpty) return;
 
@@ -210,7 +231,7 @@ class _AccordionDefaultState extends State<AccordionDefault> {
           _abertos.add(index);
           _ordemAbertura.add(index);
         }
-        while (_abertos.length > widget.maximoSecoesAbertas &&
+        while (_abertos.length > widget.parent.maximoSecoesAbertas &&
             _ordemAbertura.isNotEmpty) {
           final maisAntiga = _ordemAbertura.removeAt(0);
           _abertos.remove(maisAntiga);
@@ -218,10 +239,10 @@ class _AccordionDefaultState extends State<AccordionDefault> {
       });
     }
 
-    if (widget.atrasoSequenciaAberturaInicial == Duration.zero) {
+    if (widget.parent.atrasoSequenciaAberturaInicial == Duration.zero) {
       abrirTodos();
     } else {
-      Future.delayed(widget.atrasoSequenciaAberturaInicial, abrirTodos);
+      Future.delayed(widget.parent.atrasoSequenciaAberturaInicial, abrirTodos);
     }
   }
 
@@ -245,13 +266,14 @@ class _AccordionDefaultState extends State<AccordionDefault> {
   }
 
   void _rolarParaSecao(int index) {
-    if (widget.rolarParaSecaoAoAbrir == AccordionRolagem.nenhuma) return;
+    if (widget.parent.rolarParaSecaoAoAbrir == AccordionRolagem.nenhuma) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final contexto = _chaves[index].currentContext;
       if (contexto == null) return;
       Scrollable.ensureVisible(
         contexto,
-        duration: widget.rolarParaSecaoAoAbrir == AccordionRolagem.rapida
+        duration:
+            widget.parent.rolarParaSecaoAoAbrir == AccordionRolagem.rapida
             ? const Duration(milliseconds: 200)
             : const Duration(milliseconds: 500),
         curve: Curves.easeInOut,
@@ -261,7 +283,7 @@ class _AccordionDefaultState extends State<AccordionDefault> {
   }
 
   void _alternar(int index) {
-    final item = widget.itens[index];
+    final item = widget.parent.itens[index];
     final aberto = _abertos.contains(index);
 
     setState(() {
@@ -269,21 +291,21 @@ class _AccordionDefaultState extends State<AccordionDefault> {
         _abertos.remove(index);
         _ordemAbertura.remove(index);
         item.aoFechar?.call();
-        _disparaFeedback(widget.feedbackHapticoAoFechar);
+        _disparaFeedback(widget.parent.feedbackHapticoAoFechar);
         return;
       }
 
-      while (_abertos.length >= widget.maximoSecoesAbertas &&
+      while (_abertos.length >= widget.parent.maximoSecoesAbertas &&
           _ordemAbertura.isNotEmpty) {
         final maisAntiga = _ordemAbertura.removeAt(0);
         _abertos.remove(maisAntiga);
-        widget.itens[maisAntiga].aoFechar?.call();
+        widget.parent.itens[maisAntiga].aoFechar?.call();
       }
 
       _abertos.add(index);
       _ordemAbertura.add(index);
       item.aoAbrir?.call();
-      _disparaFeedback(widget.feedbackHapticoAoAbrir);
+      _disparaFeedback(widget.parent.feedbackHapticoAoAbrir);
     });
 
     if (!aberto) _rolarParaSecao(index);
@@ -291,45 +313,52 @@ class _AccordionDefaultState extends State<AccordionDefault> {
 
   Color _corFundoCabecalho(AccordionItem item, bool aberto, BuildContext context) {
     final fechado = item.corFundoCabecalho ??
-        widget.corFundoCabecalho ??
+        widget.parent.corFundoCabecalho ??
         Theme.of(context).colorScheme.primary;
     if (!aberto) return fechado;
-    return item.corFundoCabecalhoAberto ?? widget.corFundoCabecalhoAberto ?? fechado;
+    return item.corFundoCabecalhoAberto ??
+        widget.parent.corFundoCabecalhoAberto ??
+        fechado;
   }
 
   Color _corBordaCabecalho(AccordionItem item, bool aberto, BuildContext context) {
     final fechado = item.corBordaCabecalho ??
-        widget.corBordaCabecalho ??
+        widget.parent.corBordaCabecalho ??
         Theme.of(context).colorScheme.primary;
     if (!aberto) return fechado;
-    return item.corBordaCabecalhoAberto ?? widget.corBordaCabecalhoAberto ?? fechado;
+    return item.corBordaCabecalhoAberto ??
+        widget.parent.corBordaCabecalhoAberto ??
+        fechado;
   }
 
   double _larguraBordaCabecalho(AccordionItem item) =>
-      item.larguraBordaCabecalho ?? widget.larguraBordaCabecalho;
+      item.larguraBordaCabecalho ?? widget.parent.larguraBordaCabecalho;
 
   EdgeInsetsGeometry _espacamentoCabecalho(AccordionItem item) =>
-      item.espacamentoCabecalho ?? widget.espacamentoCabecalho;
+      item.espacamentoCabecalho ?? widget.parent.espacamentoCabecalho;
 
-  double _raioBorda(AccordionItem item) => item.raioBorda ?? widget.raioBorda;
+  double _raioBorda(AccordionItem item) =>
+      item.raioBorda ?? widget.parent.raioBorda;
 
   Color _corFundoConteudo(AccordionItem item) =>
-      item.corFundoConteudo ?? widget.corFundoConteudo;
+      item.corFundoConteudo ?? widget.parent.corFundoConteudo;
 
   Color _corBordaConteudo(AccordionItem item) =>
-      item.corBordaConteudo ?? widget.corBordaConteudo;
+      item.corBordaConteudo ?? widget.parent.corBordaConteudo;
 
   double _larguraBordaConteudo(AccordionItem item) =>
-      item.larguraBordaConteudo ?? widget.larguraBordaConteudo;
+      item.larguraBordaConteudo ?? widget.parent.larguraBordaConteudo;
 
   double _espacamentoHorizontalConteudo(AccordionItem item) =>
-      item.espacamentoHorizontalConteudo ?? widget.espacamentoHorizontalConteudo;
+      item.espacamentoHorizontalConteudo ??
+      widget.parent.espacamentoHorizontalConteudo;
 
   double _espacamentoVerticalConteudo(AccordionItem item) =>
-      item.espacamentoVerticalConteudo ?? widget.espacamentoVerticalConteudo;
+      item.espacamentoVerticalConteudo ??
+      widget.parent.espacamentoVerticalConteudo;
 
   Widget _buildCabecalho(int index, bool aberto) {
-    final item = widget.itens[index];
+    final item = widget.parent.itens[index];
     final raio = _raioBorda(item);
 
     return InkWell(
@@ -349,10 +378,11 @@ class _AccordionDefaultState extends State<AccordionDefault> {
           children: [
             if (item.iconeEsquerdo != null) ...[
               AnimatedRotation(
-                turns: (aberto && widget.inverterIconeEsquerdoSeAberto)
+                turns:
+                    (aberto && widget.parent.inverterIconeEsquerdoSeAberto)
                     ? 0.5
                     : 0,
-                duration: widget.duracaoAnimacao,
+                duration: widget.parent.duracaoAnimacao,
                 child: item.iconeEsquerdo!,
               ),
               const SizedBox(width: 8),
@@ -360,9 +390,12 @@ class _AccordionDefaultState extends State<AccordionDefault> {
             Expanded(child: item.cabecalho),
             const SizedBox(width: 8),
             AnimatedRotation(
-              turns: (aberto && widget.inverterIconeDireitoSeAberto) ? 0.5 : 0,
-              duration: widget.duracaoAnimacao,
-              child: item.iconeDireito ?? widget.iconeDireitoPadrao,
+              turns:
+                  (aberto && widget.parent.inverterIconeDireitoSeAberto)
+                  ? 0.5
+                  : 0,
+              duration: widget.parent.duracaoAnimacao,
+              child: item.iconeDireito ?? widget.parent.iconeDireitoPadrao,
             ),
           ],
         ),
@@ -371,7 +404,7 @@ class _AccordionDefaultState extends State<AccordionDefault> {
   }
 
   Widget _buildConteudo(int index, bool aberto) {
-    final item = widget.itens[index];
+    final item = widget.parent.itens[index];
     final raio = _raioBorda(item);
 
     final corpo = aberto
@@ -395,21 +428,21 @@ class _AccordionDefaultState extends State<AccordionDefault> {
         : SizedBox(key: ValueKey('vazio_$index'), width: double.infinity);
 
     final animado = AnimatedSize(
-      duration: widget.animarAberturaFechamento
-          ? widget.duracaoAnimacao
+      duration: widget.parent.animarAberturaFechamento
+          ? widget.parent.duracaoAnimacao
           : Duration.zero,
-      curve: widget.curvaAnimacao,
+      curve: widget.parent.curvaAnimacao,
       alignment: Alignment.topCenter,
       child: corpo,
     );
 
-    if (!aberto || !widget.escalarDuranteAnimacao) return animado;
+    if (!aberto || !widget.parent.escalarDuranteAnimacao) return animado;
 
     return TweenAnimationBuilder<double>(
       key: ValueKey('escala_$index'),
       tween: Tween(begin: 0.96, end: 1.0),
-      duration: widget.duracaoAnimacao,
-      curve: widget.curvaAnimacao,
+      duration: widget.parent.duracaoAnimacao,
+      curve: widget.parent.curvaAnimacao,
       builder: (context, valor, filho) =>
           Transform.scale(scale: valor, alignment: Alignment.topCenter, child: filho),
       child: animado,
@@ -430,7 +463,7 @@ class _AccordionDefaultState extends State<AccordionDefault> {
 
   @override
   Widget build(BuildContext context) {
-    final total = widget.itens.length;
+    final total = widget.parent.itens.length;
     final filhos = <Widget>[];
 
     for (var i = 0; i < total; i++) {
@@ -441,21 +474,21 @@ class _AccordionDefaultState extends State<AccordionDefault> {
         filhos.add(
           SizedBox(
             height: proximaOuAtualAberta
-                ? widget.espacamentoEntreSecoesAbertas
-                : widget.espacamentoEntreSecoesFechadas,
+                ? widget.parent.espacamentoEntreSecoesAbertas
+                : widget.parent.espacamentoEntreSecoesFechadas,
           ),
         );
       }
     }
 
     final padding = EdgeInsets.only(
-      top: widget.espacamentoTopoLista,
-      bottom: widget.espacamentoRodapeLista,
-      left: widget.espacamentoHorizontalLista,
-      right: widget.espacamentoHorizontalLista,
+      top: widget.parent.espacamentoTopoLista,
+      bottom: widget.parent.espacamentoRodapeLista,
+      left: widget.parent.espacamentoHorizontalLista,
+      right: widget.parent.espacamentoHorizontalLista,
     );
 
-    if (widget.desabilitarRolagem) {
+    if (widget.parent.desabilitarRolagem) {
       return Padding(
         padding: padding,
         child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: filhos),

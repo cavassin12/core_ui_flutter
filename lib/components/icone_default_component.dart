@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../core/platform_widget.dart';
 import '../types/icones_default.dart';
 
-class IconeDefaultComponent extends StatelessWidget {
+class IconeDefaultComponent extends PlatformWidget {
   /// Aceita String de classe legada, nome do ícone ou diretamente um `IconData`
   final dynamic icone;
 
@@ -52,8 +53,7 @@ class IconeDefaultComponent extends StatelessWidget {
     return iconesLucideMap[chaveNormalizada];
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _build(BuildContext context) {
     final iconData = _iconeLucideData;
     if (iconData == null) return const SizedBox.shrink();
 
@@ -62,4 +62,12 @@ class IconeDefaultComponent extends StatelessWidget {
 
     return Icon(iconData, size: sizeResolved, color: colorResolved);
   }
+
+  // Um ícone não tem uma variação visual nativa relevante entre plataformas —
+  // a mesma implementação é usada em todas.
+  @override
+  Widget createAndroidWidget(BuildContext context) => _build(context);
+
+  @override
+  Widget createIosWidget(BuildContext context) => _build(context);
 }

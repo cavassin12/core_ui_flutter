@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../core/platform_widget.dart';
+
 /// Componente único de switch com múltiplas opções (segmented control),
 /// inspirado no pacote `toggle_switch` (PramodJoshi/toggle_switch), com
 /// todos os parâmetros de customização traduzidos para português: rótulos,
@@ -14,7 +16,7 @@ import 'package:flutter/material.dart';
 ///   aoAlternar: (indice) => print('Selecionado: $indice'),
 /// )
 /// ```
-class ToggleSwitchDefault extends StatefulWidget {
+class ToggleSwitchDefault extends PlatformWidget {
   /// Textos exibidos em cada opção do switch.
   final List<String>? rotulos;
 
@@ -184,47 +186,69 @@ class ToggleSwitchDefault extends StatefulWidget {
          'Informe rotulos, icones, widgetsPersonalizados ou totalOpcoes.',
        );
 
+  // Um toggle switch não tem uma variação visual nativa relevante entre
+  // plataformas — a mesma implementação é usada em todas.
   @override
-  State<ToggleSwitchDefault> createState() => _ToggleSwitchDefaultState();
+  Widget createAndroidWidget(BuildContext context) =>
+      _ToggleSwitchDefaultBase(parent: this);
+
+  @override
+  Widget createIosWidget(BuildContext context) =>
+      _ToggleSwitchDefaultBase(parent: this);
 }
 
-class _ToggleSwitchDefaultState extends State<ToggleSwitchDefault> {
+// =============================================================================
+// IMPLEMENTAÇÃO ESTADUALIZADA INTERNA
+// =============================================================================
+
+class _ToggleSwitchDefaultBase extends StatefulWidget {
+  final ToggleSwitchDefault parent;
+
+  const _ToggleSwitchDefaultBase({required this.parent});
+
+  @override
+  State<_ToggleSwitchDefaultBase> createState() =>
+      _ToggleSwitchDefaultBaseState();
+}
+
+class _ToggleSwitchDefaultBaseState extends State<_ToggleSwitchDefaultBase> {
   late int? _selecionado;
 
   @override
   void initState() {
     super.initState();
-    _selecionado = widget.indiceInicial;
+    _selecionado = widget.parent.indiceInicial;
   }
 
   @override
-  void didUpdateWidget(covariant ToggleSwitchDefault oldWidget) {
+  void didUpdateWidget(covariant _ToggleSwitchDefaultBase oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.indiceInicial != oldWidget.indiceInicial) {
-      _selecionado = widget.indiceInicial;
+    if (widget.parent.indiceInicial != oldWidget.parent.indiceInicial) {
+      _selecionado = widget.parent.indiceInicial;
     }
   }
 
   int get _total =>
-      widget.totalOpcoes ??
-      widget.rotulos?.length ??
-      widget.icones?.length ??
-      widget.widgetsPersonalizados?.length ??
+      widget.parent.totalOpcoes ??
+      widget.parent.rotulos?.length ??
+      widget.parent.icones?.length ??
+      widget.parent.widgetsPersonalizados?.length ??
       0;
 
   Future<void> _aoTocar(int index) async {
-    if (widget.desabilitado) return;
+    if (widget.parent.desabilitado) return;
 
     if (_selecionado == index) {
-      if (!widget.permitirDesselecionar) return;
-      if (widget.ignorarToqueRepetido) return;
+      if (!widget.parent.permitirDesselecionar) return;
+      if (widget.parent.ignorarToqueRepetido) return;
     }
 
-    final desmarcando = _selecionado == index && widget.permitirDesselecionar;
+    final desmarcando =
+        _selecionado == index && widget.parent.permitirDesselecionar;
     final novoIndice = desmarcando ? null : index;
 
-    if (widget.cancelarAlternancia != null) {
-      final podeAlternar = await widget.cancelarAlternancia!(
+    if (widget.parent.cancelarAlternancia != null) {
+      final podeAlternar = await widget.parent.cancelarAlternancia!(
         _selecionado,
         index,
       );
@@ -232,62 +256,66 @@ class _ToggleSwitchDefaultState extends State<ToggleSwitchDefault> {
     }
 
     setState(() => _selecionado = novoIndice);
-    widget.aoAlternar?.call(novoIndice);
+    widget.parent.aoAlternar?.call(novoIndice);
   }
 
   Color _resolverCorFundoAtivo(int index) {
-    final cores = widget.coresFundoAtivo;
+    final cores = widget.parent.coresFundoAtivo;
     if (cores != null && index < cores.length) return cores[index];
-    return widget.corFundoAtivo;
+    return widget.parent.corFundoAtivo;
   }
 
   TextStyle _resolverEstiloTexto(int index, bool ativo) {
-    final estilos = widget.estilosTextoPersonalizados;
+    final estilos = widget.parent.estilosTextoPersonalizados;
     final base = (estilos != null && index < estilos.length)
         ? estilos[index]
-        : TextStyle(fontSize: widget.tamanhoFonte);
+        : TextStyle(fontSize: widget.parent.tamanhoFonte);
     return base.copyWith(
-      color: base.color ?? (ativo ? widget.corTextoAtivo : widget.corTextoInativo),
+      color:
+          base.color ??
+          (ativo ? widget.parent.corTextoAtivo : widget.parent.corTextoInativo),
       fontWeight: base.fontWeight ?? FontWeight.w500,
     );
   }
 
   Widget _buildConteudo(int index, bool ativo) {
-    final personalizados = widget.widgetsPersonalizados;
+    final personalizados = widget.parent.widgetsPersonalizados;
     if (personalizados != null && index < personalizados.length) {
       return personalizados[index];
     }
 
-    final cor = ativo ? widget.corTextoAtivo : widget.corTextoInativo;
-    final icones = widget.icones;
+    final cor = ativo ? widget.parent.corTextoAtivo : widget.parent.corTextoInativo;
+    final icones = widget.parent.icones;
     final icone = (icones != null && index < icones.length)
         ? icones[index]
         : null;
-    final rotulos = widget.rotulos;
+    final rotulos = widget.parent.rotulos;
     final rotulo = (rotulos != null && index < rotulos.length)
         ? rotulos[index]
         : null;
 
     return Row(
       mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: widget.centralizarTexto
+      mainAxisAlignment: widget.parent.centralizarTexto
           ? MainAxisAlignment.center
           : MainAxisAlignment.start,
       children: [
         if (icone != null) ...[
-          Icon(icone, size: widget.tamanhoIcone, color: cor),
+          Icon(icone, size: widget.parent.tamanhoIcone, color: cor),
           if (rotulo != null) const SizedBox(width: 6),
         ],
         if (rotulo != null)
           Flexible(
             child: Text(
               rotulo,
-              textAlign: widget.centralizarTexto ? TextAlign.center : null,
-              overflow: widget.textoMultilinha
+              textAlign: widget.parent.centralizarTexto
+                  ? TextAlign.center
+                  : null,
+              overflow: widget.parent.textoMultilinha
                   ? TextOverflow.visible
                   : TextOverflow.ellipsis,
-              softWrap: widget.textoMultilinha,
-              maxLines: widget.textoMultilinha ? null : 1,
+              softWrap: widget.parent.textoMultilinha,
+              maxLines: widget.parent.textoMultilinha ? null : 1,
               style: _resolverEstiloTexto(index, ativo),
             ),
           ),
@@ -307,17 +335,20 @@ class _ToggleSwitchDefaultState extends State<ToggleSwitchDefault> {
       child: Container(
         alignment: Alignment.center,
         padding: const EdgeInsets.symmetric(horizontal: 10),
-        decoration: (mostrarDivisor && widget.corDivisor != null)
+        decoration: (mostrarDivisor && widget.parent.corDivisor != null)
             ? BoxDecoration(
-                border: widget.vertical
+                border: widget.parent.vertical
                     ? Border(
                         bottom: BorderSide(
-                          color: widget.corDivisor!,
+                          color: widget.parent.corDivisor!,
                           width: 1,
                         ),
                       )
                     : Border(
-                        right: BorderSide(color: widget.corDivisor!, width: 1),
+                        right: BorderSide(
+                          color: widget.parent.corDivisor!,
+                          width: 1,
+                        ),
                       ),
               )
             : null,
@@ -329,14 +360,16 @@ class _ToggleSwitchDefaultState extends State<ToggleSwitchDefault> {
   Widget _buildIndicador(double raio, double esquerda, double topo, double largura, double altura) {
     if (_selecionado == null) return const SizedBox.shrink();
     return AnimatedPositioned(
-      duration: widget.animar ? widget.duracaoAnimacao : Duration.zero,
-      curve: widget.curvaAnimacao,
+      duration: widget.parent.animar
+          ? widget.parent.duracaoAnimacao
+          : Duration.zero,
+      curve: widget.parent.curvaAnimacao,
       left: esquerda,
       top: topo,
       width: largura,
       height: altura,
       child: Container(
-        margin: EdgeInsets.all(widget.larguraBorda),
+        margin: EdgeInsets.all(widget.parent.larguraBorda),
         decoration: BoxDecoration(
           color: _resolverCorFundoAtivo(_selecionado!),
           borderRadius: BorderRadius.circular(raio),
@@ -350,32 +383,38 @@ class _ToggleSwitchDefaultState extends State<ToggleSwitchDefault> {
       builder: (context, constraints) {
         final larguraDisponivel = constraints.maxWidth.isFinite
             ? constraints.maxWidth
-            : widget.larguraMinima * total;
-        final larguraItem = widget.vertical
+            : widget.parent.larguraMinima * total;
+        final larguraItem = widget.parent.vertical
             ? larguraDisponivel
             : larguraDisponivel / total;
-        final alturaTotal = widget.vertical
-            ? widget.altura * total
-            : widget.altura;
+        final alturaTotal = widget.parent.vertical
+            ? widget.parent.altura * total
+            : widget.parent.altura;
 
         return SizedBox(
-          width: widget.vertical ? larguraDisponivel : null,
+          width: widget.parent.vertical ? larguraDisponivel : null,
           height: alturaTotal,
           child: Stack(
             children: [
               _buildIndicador(
                 raio,
-                widget.vertical ? 0 : larguraItem * (_selecionado ?? 0),
-                widget.vertical ? widget.altura * (_selecionado ?? 0) : 0,
-                widget.vertical ? larguraDisponivel : larguraItem,
-                widget.altura,
+                widget.parent.vertical ? 0 : larguraItem * (_selecionado ?? 0),
+                widget.parent.vertical
+                    ? widget.parent.altura * (_selecionado ?? 0)
+                    : 0,
+                widget.parent.vertical ? larguraDisponivel : larguraItem,
+                widget.parent.altura,
               ),
               Flex(
-                direction: widget.vertical ? Axis.vertical : Axis.horizontal,
+                direction: widget.parent.vertical
+                    ? Axis.vertical
+                    : Axis.horizontal,
                 children: List.generate(total, (index) {
                   return SizedBox(
-                    width: widget.vertical ? larguraDisponivel : larguraItem,
-                    height: widget.altura,
+                    width: widget.parent.vertical
+                        ? larguraDisponivel
+                        : larguraItem,
+                    height: widget.parent.altura,
                     child: _buildOpcao(
                       index,
                       raio,
@@ -392,9 +431,10 @@ class _ToggleSwitchDefaultState extends State<ToggleSwitchDefault> {
   }
 
   Widget _buildLargurasFixas(int total, double raio) {
-    final larguras = widget.largurasPersonalizadas!;
-    double larguraDe(int index) =>
-        index < larguras.length ? larguras[index] : widget.larguraMinima;
+    final larguras = widget.parent.largurasPersonalizadas!;
+    double larguraDe(int index) => index < larguras.length
+        ? larguras[index]
+        : widget.parent.larguraMinima;
 
     final offsets = <double>[];
     var acumulado = 0.0;
@@ -406,26 +446,36 @@ class _ToggleSwitchDefaultState extends State<ToggleSwitchDefault> {
     final maiorLargura = List.generate(
       total,
       larguraDe,
-    ).fold<double>(widget.larguraMinima, (a, b) => a > b ? a : b);
+    ).fold<double>(widget.parent.larguraMinima, (a, b) => a > b ? a : b);
 
     return SizedBox(
-      width: widget.vertical ? maiorLargura : acumulado,
-      height: widget.vertical ? acumulado : widget.altura,
+      width: widget.parent.vertical ? maiorLargura : acumulado,
+      height: widget.parent.vertical ? acumulado : widget.parent.altura,
       child: Stack(
         children: [
           _buildIndicador(
             raio,
-            widget.vertical ? 0 : offsets[_selecionado ?? 0],
-            widget.vertical ? offsets[_selecionado ?? 0] : 0,
-            widget.vertical ? maiorLargura : larguraDe(_selecionado ?? 0),
-            widget.vertical ? larguraDe(_selecionado ?? 0) : widget.altura,
+            widget.parent.vertical ? 0 : offsets[_selecionado ?? 0],
+            widget.parent.vertical ? offsets[_selecionado ?? 0] : 0,
+            widget.parent.vertical
+                ? maiorLargura
+                : larguraDe(_selecionado ?? 0),
+            widget.parent.vertical
+                ? larguraDe(_selecionado ?? 0)
+                : widget.parent.altura,
           ),
           Flex(
-            direction: widget.vertical ? Axis.vertical : Axis.horizontal,
+            direction: widget.parent.vertical
+                ? Axis.vertical
+                : Axis.horizontal,
             children: List.generate(total, (index) {
               return SizedBox(
-                width: widget.vertical ? maiorLargura : larguraDe(index),
-                height: widget.vertical ? larguraDe(index) : widget.altura,
+                width: widget.parent.vertical
+                    ? maiorLargura
+                    : larguraDe(index),
+                height: widget.parent.vertical
+                    ? larguraDe(index)
+                    : widget.parent.altura,
                 child: _buildOpcao(
                   index,
                   raio,
@@ -444,38 +494,42 @@ class _ToggleSwitchDefaultState extends State<ToggleSwitchDefault> {
     final total = _total;
     if (total == 0) return const SizedBox.shrink();
 
-    final raio = widget.estiloPilula ? widget.altura / 2 : widget.raioCanto;
+    final raio = widget.parent.estiloPilula
+        ? widget.parent.altura / 2
+        : widget.parent.raioCanto;
 
     return Directionality(
-      textDirection: widget.direitaParaEsquerda
+      textDirection: widget.parent.direitaParaEsquerda
           ? TextDirection.rtl
           : Directionality.of(context),
       child: Opacity(
-        opacity: widget.desabilitado ? 0.5 : 1,
+        opacity: widget.parent.desabilitado ? 0.5 : 1,
         child: IgnorePointer(
-          ignoring: widget.desabilitado,
+          ignoring: widget.parent.desabilitado,
           child: Container(
             decoration: BoxDecoration(
-              color: widget.corFundoInativo,
+              color: widget.parent.corFundoInativo,
               borderRadius: BorderRadius.circular(raio),
-              border: widget.corBorda != null
+              border: widget.parent.corBorda != null
                   ? Border.all(
-                      color: widget.corBorda!,
-                      width: widget.larguraBorda == 0 ? 1 : widget.larguraBorda,
+                      color: widget.parent.corBorda!,
+                      width: widget.parent.larguraBorda == 0
+                          ? 1
+                          : widget.parent.larguraBorda,
                     )
                   : null,
-              boxShadow: widget.elevacao > 0
+              boxShadow: widget.parent.elevacao > 0
                   ? [
                       BoxShadow(
                         color: Colors.black.withValues(alpha: 0.15),
-                        blurRadius: widget.elevacao,
-                        offset: Offset(0, widget.elevacao / 3),
+                        blurRadius: widget.parent.elevacao,
+                        offset: Offset(0, widget.parent.elevacao / 3),
                       ),
                     ]
                   : null,
             ),
             clipBehavior: Clip.antiAlias,
-            child: widget.largurasPersonalizadas != null
+            child: widget.parent.largurasPersonalizadas != null
                 ? _buildLargurasFixas(total, raio)
                 : _buildDivisaoIgual(total, raio),
           ),

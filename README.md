@@ -99,14 +99,18 @@ Todos os componentes abaixo são exportados por `package:core_ui_flutter/core_ui
 | Componente | Descrição | Documentação |
 |---|---|---|
 | **AccordionDefault** | Lista de seções expansíveis (acordeão), com número máximo de seções abertas, animação, ícones, cores/bordas por seção, rolagem automática e feedback tátil. | [doc/accordion_default.md](doc/accordion_default.md) |
+| **AppBarDefault** | Barra superior do app (navbar), com botão de voltar automático, ações, faixa inferior opcional e aparência nativa por plataforma (Material/Cupertino). | [doc/app_bar_default.md](doc/app_bar_default.md) |
 | **ButtonDefault** | Botão com cor resolvida automaticamente por severidade (primary/danger/warning/success/info), suporte a ícone + texto e variação de tamanho. | [doc/button_default.md](doc/button_default.md) |
 | **CardDefault** | Card no estilo Bootstrap: cabeçalho, corpo, rodapé, imagem no topo/rodapé, imagem de fundo com overlay, lista interna e layout horizontal. | [doc/card_default.md](doc/card_default.md) |
 | **CheckboxDefault** | Checkbox com transição animada entre estados e suporte a widgets customizados dentro da caixa. | [doc/checkbox_default.md](doc/checkbox_default.md) |
+| **DatePickerDefault** | Seleção de data e/ou hora, reaproveitando o InputDefault como campo de exibição e abrindo o seletor nativo (Material/Cupertino) ao tocar. | [doc/date_picker_default.md](doc/date_picker_default.md) |
 | **DialogDefault** | Dialog/modal no estilo Bootstrap: tamanhos, centralização, rolagem, backdrop estático, fechamento por ESC/clique fora e variante tela-cheia. | [doc/dialog_default.md](doc/dialog_default.md) |
 | **DropdownDefault** | Dropdown no estilo Bootstrap: botão trigger, direção down/up, itens com ícone/ativo/desabilitado, divisores, cabeçalhos, tamanhos, variante dark e auto-close configurável. | [doc/dropdown_default.md](doc/dropdown_default.md) |
 | **GridLinha / GridColuna** | Sistema de grid responsivo de 12 colunas, com breakpoints, colunas automáticas, offset e reordenação — equivalente a `row`/`col-*` do Bootstrap. | [doc/grid_default.md](doc/grid_default.md) |
 | **IconeDefaultComponent** | Resolve e exibe um ícone a partir de várias formas de entrada: catálogo padrão, `IconData` direto, ou nome de ícone Lucide em texto. | [doc/icone_default_component.md](doc/icone_default_component.md) |
 | **InputDefault** | Campo de texto com validação embutida (obrigatório, e-mail, min/max), máscara simples, normalização de números e alternância de senha. | [doc/input_default.md](doc/input_default.md) |
+| **PaginationDefault** | Paginação avulsa (botões numéricos, anterior/próxima, primeira/última), reutilizável em qualquer lista fora do TableGrid. | [doc/pagination_default.md](doc/pagination_default.md) |
+| **ProgressBarDefault** | Barra de progresso linear determinada ou indeterminada, com rótulo/percentual opcional. | [doc/progress_bar_default.md](doc/progress_bar_default.md) |
 | **SelectDefault** | Campo de seleção com busca opcional (bottom sheet com filtro), suporte a `Map`/objetos como opções, e fluxo de cadastro auxiliar. | [doc/select_default.md](doc/select_default.md) |
 | **SnackbarDefault** | Conteúdo customizado para `SnackBar`/`MaterialBanner`, com estilo em "bolha" e cores por tipo de conteúdo (sucesso/erro/aviso/ajuda). | [doc/snackbar_default.md](doc/snackbar_default.md) |
 | **TabContainerDefault** | Abas com conteúdo (tab container), com posição da barra, cores, bordas, animação e controlador próprio para seleção programática. | [doc/tab_container_default.md](doc/tab_container_default.md) |
@@ -117,7 +121,7 @@ Todos os componentes abaixo são exportados por `package:core_ui_flutter/core_ui
 
 ## `PlatformWidget`
 
-Componentes adaptativos por plataforma (a maioria dos itens acima) estendem `PlatformWidget` (`lib/core/platform_widget.dart`), que centraliza a ramificação por plataforma:
+Todos os componentes acima estendem `PlatformWidget` (`lib/core/platform_widget.dart`), que centraliza a ramificação por plataforma:
 
 ```dart
 class MeuComponente extends PlatformWidget {

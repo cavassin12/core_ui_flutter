@@ -1,3 +1,4 @@
+import 'package:core_ui_flutter/core/platform_widget.dart';
 import 'package:core_ui_flutter/models/snackbar/assets_path.dart';
 import 'package:core_ui_flutter/models/snackbar/content_type.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:ui' as ui;
 import 'dart:math' as math;
 
-class SnackbarDefault extends StatelessWidget {
+class SnackbarDefault extends PlatformWidget {
   final String title;
 
   /// message String is the body message which shows only 2 lines at max
@@ -37,8 +38,7 @@ class SnackbarDefault extends StatelessWidget {
     this.inMaterialBanner = false,
   });
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _build(BuildContext context) {
     final isRTL = Directionality.of(context) == TextDirection.rtl;
 
     final size = MediaQuery.of(context).size;
@@ -235,4 +235,12 @@ class SnackbarDefault extends StatelessWidget {
     ui.Color? color,
     ui.BlendMode colorBlendMode,
   ) => color == null ? null : ui.ColorFilter.mode(color, colorBlendMode);
+
+  // O conteúdo da snackbar não tem uma variação visual nativa relevante
+  // entre plataformas — a mesma implementação é usada em todas.
+  @override
+  Widget createAndroidWidget(BuildContext context) => _build(context);
+
+  @override
+  Widget createIosWidget(BuildContext context) => _build(context);
 }

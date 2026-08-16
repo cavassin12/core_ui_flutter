@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../controllers/tab_container_controlador.dart';
+import '../core/platform_widget.dart';
 import '../types/tab_container_borda.dart';
 
 /// Componente único de abas com conteúdo (tab container), inspirado no
@@ -24,7 +25,7 @@ import '../types/tab_container_borda.dart';
 ///   cores: const [Colors.blue, Colors.teal],
 /// )
 /// ```
-class TabContainerDefault extends StatefulWidget {
+class TabContainerDefault extends PlatformWidget {
   /// Widgets exibidos na barra de abas.
   final List<Widget> abas;
 
@@ -170,30 +171,51 @@ class TabContainerDefault extends StatefulWidget {
          'filhos deve ter o mesmo tamanho de abas.',
        );
 
+  // Um tab container não tem uma variação visual nativa relevante entre
+  // plataformas — a mesma implementação é usada em todas.
   @override
-  State<TabContainerDefault> createState() => _TabContainerDefaultState();
+  Widget createAndroidWidget(BuildContext context) =>
+      _TabContainerDefaultBase(parent: this);
+
+  @override
+  Widget createIosWidget(BuildContext context) =>
+      _TabContainerDefaultBase(parent: this);
 }
 
-class _TabContainerDefaultState extends State<TabContainerDefault> {
+// =============================================================================
+// IMPLEMENTAÇÃO ESTADUALIZADA INTERNA
+// =============================================================================
+
+class _TabContainerDefaultBase extends StatefulWidget {
+  final TabContainerDefault parent;
+
+  const _TabContainerDefaultBase({required this.parent});
+
+  @override
+  State<_TabContainerDefaultBase> createState() =>
+      _TabContainerDefaultBaseState();
+}
+
+class _TabContainerDefaultBaseState extends State<_TabContainerDefaultBase> {
   late TabContainerControlador _controladorInterno;
 
   TabContainerControlador get _controlador =>
-      widget.controlador ?? _controladorInterno;
+      widget.parent.controlador ?? _controladorInterno;
 
   @override
   void initState() {
     super.initState();
     _controladorInterno = TabContainerControlador(
-      indiceInicial: widget.indiceInicial,
+      indiceInicial: widget.parent.indiceInicial,
     );
     _controlador.addListener(_aoMudarControlador);
   }
 
   @override
-  void didUpdateWidget(covariant TabContainerDefault oldWidget) {
+  void didUpdateWidget(covariant _TabContainerDefaultBase oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.controlador != widget.controlador) {
-      (oldWidget.controlador ?? _controladorInterno).removeListener(
+    if (oldWidget.parent.controlador != widget.parent.controlador) {
+      (oldWidget.parent.controlador ?? _controladorInterno).removeListener(
         _aoMudarControlador,
       );
       _controlador.addListener(_aoMudarControlador);
@@ -210,30 +232,30 @@ class _TabContainerDefaultState extends State<TabContainerDefault> {
   void _aoMudarControlador() => setState(() {});
 
   bool get _vertical =>
-      widget.bordaAba == TabContainerBorda.esquerda ||
-      widget.bordaAba == TabContainerBorda.direita;
+      widget.parent.bordaAba == TabContainerBorda.esquerda ||
+      widget.parent.bordaAba == TabContainerBorda.direita;
 
   void _selecionar(int index) {
-    if (!widget.habilitado) return;
-    if (widget.habilitarFeedback) Feedback.forTap(context);
+    if (!widget.parent.habilitado) return;
+    if (widget.parent.habilitarFeedback) Feedback.forTap(context);
     _controlador.selecionar(index);
-    widget.aoTrocarAba?.call(index);
+    widget.parent.aoTrocarAba?.call(index);
   }
 
   Color _corDaAba(int index) {
-    final cores = widget.cores;
+    final cores = widget.parent.cores;
     if (cores != null && index < cores.length) return cores[index];
-    return widget.cor ?? Theme.of(context).colorScheme.primary;
+    return widget.parent.cor ?? Theme.of(context).colorScheme.primary;
   }
 
   Widget _buildAba(int index, double comprimento) {
     final ativo = _controlador.indice == index;
-    var conteudo = widget.abas[index];
+    var conteudo = widget.parent.abas[index];
 
-    if (widget.sobrescreverPropriedadesTexto && conteudo is Text) {
+    if (widget.parent.sobrescreverPropriedadesTexto && conteudo is Text) {
       final estilo = ativo
-          ? widget.estiloTextoSelecionado
-          : widget.estiloTextoNaoSelecionado;
+          ? widget.parent.estiloTextoSelecionado
+          : widget.parent.estiloTextoNaoSelecionado;
       conteudo = Text(
         conteudo.data ?? '',
         style: (conteudo.style ?? const TextStyle()).merge(estilo),
@@ -251,8 +273,8 @@ class _TabContainerDefaultState extends State<TabContainerDefault> {
   }
 
   Widget _buildBarraDeAbas(double extentTotal) {
-    final raioAba = widget.raioBordaAba ?? widget.raioBorda;
-    final total = widget.abas.length;
+    final raioAba = widget.parent.raioBordaAba ?? widget.parent.raioBorda;
+    final total = widget.parent.abas.length;
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -261,25 +283,25 @@ class _TabContainerDefaultState extends State<TabContainerDefault> {
             : constraints.maxWidth;
         final areaAbas =
             (espacoDisponivel.isFinite ? espacoDisponivel : extentTotal) *
-            (widget.fimAbas - widget.inicioAbas);
+            (widget.parent.fimAbas - widget.parent.inicioAbas);
         final deslocamentoInicial =
             (espacoDisponivel.isFinite ? espacoDisponivel : extentTotal) *
-            widget.inicioAbas;
+            widget.parent.inicioAbas;
 
         final comprimentoIgual = (areaAbas / total).clamp(
-          widget.comprimentoMinimoAba ?? 0.0,
-          widget.comprimentoMaximoAba,
+          widget.parent.comprimentoMinimoAba ?? 0.0,
+          widget.parent.comprimentoMaximoAba,
         );
         final comprimentoTotalAbas = comprimentoIgual * total;
         final precisaRolar = comprimentoTotalAbas > areaAbas + 0.5;
 
         final indicador = AnimatedPositioned(
-          duration: widget.duracao,
-          curve: widget.curva,
+          duration: widget.parent.duracao,
+          curve: widget.parent.curva,
           left: _vertical ? 0 : comprimentoIgual * _controlador.indice,
           top: _vertical ? comprimentoIgual * _controlador.indice : 0,
-          width: _vertical ? widget.tamanhoAba : comprimentoIgual,
-          height: _vertical ? comprimentoIgual : widget.tamanhoAba,
+          width: _vertical ? widget.parent.tamanhoAba : comprimentoIgual,
+          height: _vertical ? comprimentoIgual : widget.parent.tamanhoAba,
           child: Container(
             decoration: BoxDecoration(
               color: _corDaAba(_controlador.indice),
@@ -309,23 +331,23 @@ class _TabContainerDefaultState extends State<TabContainerDefault> {
               ? EdgeInsets.only(top: deslocamentoInicial)
               : EdgeInsets.only(left: deslocamentoInicial),
           child: SizedBox(
-            width: _vertical ? widget.tamanhoAba : comprimentoTotalAbas,
-            height: _vertical ? comprimentoTotalAbas : widget.tamanhoAba,
+            width: _vertical ? widget.parent.tamanhoAba : comprimentoTotalAbas,
+            height: _vertical ? comprimentoTotalAbas : widget.parent.tamanhoAba,
             child: barra,
           ),
         );
 
         if (!precisaRolar) {
           return SizedBox(
-            width: _vertical ? widget.tamanhoAba : null,
-            height: _vertical ? null : widget.tamanhoAba,
+            width: _vertical ? widget.parent.tamanhoAba : null,
+            height: _vertical ? null : widget.parent.tamanhoAba,
             child: barraComPosicionamento,
           );
         }
 
         return SizedBox(
-          width: _vertical ? widget.tamanhoAba : double.infinity,
-          height: _vertical ? double.infinity : widget.tamanhoAba,
+          width: _vertical ? widget.parent.tamanhoAba : double.infinity,
+          height: _vertical ? double.infinity : widget.parent.tamanhoAba,
           child: SingleChildScrollView(
             scrollDirection: _vertical ? Axis.vertical : Axis.horizontal,
             child: barraComPosicionamento,
@@ -350,18 +372,19 @@ class _TabContainerDefaultState extends State<TabContainerDefault> {
 
   Widget _buildConteudo() {
     final padding = Padding(
-      padding: widget.childPadding,
-      child: widget.filho ?? widget.filhos![_controlador.indice],
+      padding: widget.parent.childPadding,
+      child: widget.parent.filho ?? widget.parent.filhos![_controlador.indice],
     );
 
-    if (widget.filhos == null) return padding;
+    if (widget.parent.filhos == null) return padding;
 
     return ClipRect(
       child: AnimatedSwitcher(
-        duration: widget.duracaoConteudo ?? widget.duracao,
-        switchInCurve: widget.curvaConteudo ?? widget.curva,
-        switchOutCurve: widget.curvaConteudo ?? widget.curva,
-        transitionBuilder: widget.construtorTransicao ?? _buildTransicaoPadrao,
+        duration: widget.parent.duracaoConteudo ?? widget.parent.duracao,
+        switchInCurve: widget.parent.curvaConteudo ?? widget.parent.curva,
+        switchOutCurve: widget.parent.curvaConteudo ?? widget.parent.curva,
+        transitionBuilder:
+            widget.parent.construtorTransicao ?? _buildTransicaoPadrao,
         layoutBuilder: (atual, anteriores) => Stack(
           alignment: Alignment.topCenter,
           children: [...anteriores, ?atual],
@@ -378,17 +401,17 @@ class _TabContainerDefaultState extends State<TabContainerDefault> {
   Widget build(BuildContext context) {
     final conteudo = Container(
       decoration: BoxDecoration(
-        color: (widget.cores == null && widget.cor != null)
-            ? widget.cor!.withValues(alpha: 0.08)
+        color: (widget.parent.cores == null && widget.parent.cor != null)
+            ? widget.parent.cor!.withValues(alpha: 0.08)
             : null,
       ),
       child: _buildConteudo(),
     );
 
-    final barra = _buildBarraDeAbas(widget.tamanhoAba);
+    final barra = _buildBarraDeAbas(widget.parent.tamanhoAba);
 
     final filhosLayout = <Widget>[];
-    switch (widget.bordaAba) {
+    switch (widget.parent.bordaAba) {
       case TabContainerBorda.superior:
         filhosLayout.addAll([barra, Expanded(child: conteudo)]);
         break;
@@ -409,19 +432,19 @@ class _TabContainerDefaultState extends State<TabContainerDefault> {
     );
 
     final resultado = ClipRRect(
-      borderRadius: BorderRadius.circular(widget.raioBorda),
+      borderRadius: BorderRadius.circular(widget.parent.raioBorda),
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(color: Theme.of(context).dividerColor),
-          borderRadius: BorderRadius.circular(widget.raioBorda),
+          borderRadius: BorderRadius.circular(widget.parent.raioBorda),
         ),
         child: layout,
       ),
     );
 
-    if (widget.direcaoTexto == null) return resultado;
+    if (widget.parent.direcaoTexto == null) return resultado;
     return Directionality(
-      textDirection: widget.direcaoTexto!,
+      textDirection: widget.parent.direcaoTexto!,
       child: resultado,
     );
   }
