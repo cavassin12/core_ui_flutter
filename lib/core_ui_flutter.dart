@@ -10,6 +10,7 @@ export 'components/dropdown_default.dart';
 export 'components/grid_default.dart';
 export 'components/icone_default_component.dart';
 export 'components/input_default.dart';
+export 'components/money_default.dart';
 export 'components/pagination_default.dart';
 export 'components/progress_bar_default.dart';
 export 'components/select_default.dart';

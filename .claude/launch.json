@@ -1,0 +1,14 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "modelo_web",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": [
+        "/c",
+        "cd /d D:\\Projetos\\modelos\\modelo_web && flutter run -d chrome --web-port 5959"
+      ],
+      "port": 5959
+    }
+  ]
+}

@@ -109,6 +109,7 @@ Todos os componentes abaixo são exportados por `package:core_ui_flutter/core_ui
 | **GridLinha / GridColuna** | Sistema de grid responsivo de 12 colunas, com breakpoints, colunas automáticas, offset e reordenação — equivalente a `row`/`col-*` do Bootstrap. | [doc/grid_default.md](doc/grid_default.md) |
 | **IconeDefaultComponent** | Resolve e exibe um ícone a partir de várias formas de entrada: catálogo padrão, `IconData` direto, ou nome de ícone Lucide em texto. | [doc/icone_default_component.md](doc/icone_default_component.md) |
 | **InputDefault** | Campo de texto com validação embutida (obrigatório, e-mail, min/max), máscara simples, normalização de números e alternância de senha. | [doc/input_default.md](doc/input_default.md) |
+| **MoneyDefault** | Campo de valores monetários com máscara em tempo real, casas decimais e separadores de milhar/decimal configuráveis. | [doc/money_default.md](doc/money_default.md) |
 | **PaginationDefault** | Paginação avulsa (botões numéricos, anterior/próxima, primeira/última), reutilizável em qualquer lista fora do TableGrid. | [doc/pagination_default.md](doc/pagination_default.md) |
 | **ProgressBarDefault** | Barra de progresso linear determinada ou indeterminada, com rótulo/percentual opcional. | [doc/progress_bar_default.md](doc/progress_bar_default.md) |
 | **SelectDefault** | Campo de seleção com busca opcional (bottom sheet com filtro), suporte a `Map`/objetos como opções, e fluxo de cadastro auxiliar. | [doc/select_default.md](doc/select_default.md) |
