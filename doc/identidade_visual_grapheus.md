@@ -40,6 +40,8 @@ estados semânticos, espaçamentos e contraste continuam compartilhados.
 | CRM | `#7C3AED` |
 | DocDigital | `#0891B2` |
 | Conta Porco | `#BE185D` |
+| Serviços | `#0F766E` |
+| Marketplace | `#4F46E5` |
 
 Use `GrapheusCores` em vez de repetir valores hexadecimais nos componentes.
 
@@ -85,4 +87,3 @@ declarados no asset manifest.
 Não altere tipografia, cores de erro ou contraste diretamente no
 `CoreAuthGrapheus`. A personalização deve entrar pelo tema para permanecer
 consistente em todos os componentes.
-

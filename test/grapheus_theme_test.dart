@@ -17,6 +17,16 @@ void main() {
       GrapheusTheme.tokensClaros(modulo: GrapheusModulo.crm).corPrimaria,
       GrapheusCores.crm,
     );
+    expect(
+      GrapheusTheme.tokensClaros(modulo: GrapheusModulo.servicos).corPrimaria,
+      GrapheusCores.servicos,
+    );
+    expect(
+      GrapheusTheme.tokensClaros(
+        modulo: GrapheusModulo.marketplace,
+      ).corPrimaria,
+      GrapheusCores.marketplace,
+    );
   });
 
   test('gera tokens claros e escuros consistentes', () {

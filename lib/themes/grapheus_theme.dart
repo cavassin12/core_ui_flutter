@@ -12,6 +12,8 @@ enum GrapheusModulo {
   crm,
   docDigital,
   contaPorco,
+  servicos,
+  marketplace,
 }
 
 /// Paleta institucional. Evita hexadecimais dispersos pelos componentes.
@@ -46,6 +48,8 @@ abstract final class GrapheusCores {
   static const crm = Color(0xFF7C3AED);
   static const docDigital = Color(0xFF0891B2);
   static const contaPorco = Color(0xFFBE185D);
+  static const servicos = Color(0xFF0F766E);
+  static const marketplace = Color(0xFF4F46E5);
 
   static Color destaqueDoModulo(GrapheusModulo modulo) => switch (modulo) {
     GrapheusModulo.padrao => primaria,
@@ -55,6 +59,8 @@ abstract final class GrapheusCores {
     GrapheusModulo.crm => crm,
     GrapheusModulo.docDigital => docDigital,
     GrapheusModulo.contaPorco => contaPorco,
+    GrapheusModulo.servicos => servicos,
+    GrapheusModulo.marketplace => marketplace,
   };
 }
 
