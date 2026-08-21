@@ -1,5 +1,8 @@
+import 'dart:convert';
 import 'dart:math';
+import 'dart:typed_data';
 
+import 'package:file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
 
 import '../code_design_system_theme.dart';
@@ -31,6 +34,81 @@ bool _ehVerdadeiro(dynamic valor) {
   return true;
 }
 
+String _escaparCsv(dynamic valor) {
+  final texto = valor?.toString() ?? '';
+  if (!texto.contains(RegExp('[",\r\n]'))) return texto;
+  return '"${texto.replaceAll('"', '""')}"';
+}
+
+/// Gera o conteúdo CSV usado pela exportação do [TableGrid].
+///
+/// É público para permitir validação automatizada e usos avançados, mas o fluxo
+/// comum deve ser iniciado pelo botão de exportação da própria tabela.
+String gerarCsvTableGrid<T>({
+  required List<T> data,
+  required List<DynamicColumnDTO> colunas,
+  required dynamic Function(dynamic row, String campo) resolverCampo,
+}) {
+  dynamic campo(dynamic row, String nome) => resolverCampo(row, nome);
+
+  String resolverCaminho(dynamic row, String? caminho) {
+    if (caminho == null || caminho.isEmpty) return '';
+    dynamic atual = row;
+    for (final parte in caminho.split(';')) {
+      if (atual == null) return '';
+      atual = campo(atual, parte);
+    }
+    return atual?.toString() ?? '';
+  }
+
+  String valorCelula(dynamic row, DynamicColumnDTO coluna) {
+    switch (coluna.type) {
+      case TypeColunm.texto:
+        return campo(row, coluna.field)?.toString() ?? '';
+      case TypeColunm.simNao:
+        return _ehVerdadeiro(campo(row, coluna.field)) ? 'Sim' : 'Não';
+      case TypeColunm.status:
+        return campo(row, coluna.field) == null ? 'Ativo' : 'Inativo';
+      case TypeColunm.statusBoolean:
+        return campo(row, coluna.field) == true ? 'Ativo' : 'Inativo';
+      case TypeColunm.simNaoCard:
+        return campo(row, coluna.field) == true ? 'Sim' : 'Não';
+      case TypeColunm.dataBR:
+        return toUtcLocal(campo(row, coluna.field)?.toString());
+      case TypeColunm.dataHoraBR:
+        return toUtcLocalDateTime(campo(row, coluna.field)?.toString());
+      case TypeColunm.objeto:
+        return resolverCaminho(row, coluna.objeto);
+      case TypeColunm.textoConcatenado:
+        return coluna.field
+            .split(';')
+            .map((nome) => campo(row, nome)?.toString() ?? '')
+            .join(' ')
+            .trim();
+      case TypeColunm.array:
+        final lista = campo(row, coluna.objeto ?? '');
+        if (lista is! List) return '';
+        return lista
+            .map(
+              (item) => coluna.field.isEmpty ? item : campo(item, coluna.field),
+            )
+            .where((valor) => valor != null)
+            .join(', ');
+      case TypeColunm.cor:
+        return campo(row, coluna.field)?.toString() ?? '';
+      case TypeColunm.botao:
+        return '';
+    }
+  }
+
+  final linhas = <String>[
+    colunas.map((coluna) => _escaparCsv(coluna.title)).join(','),
+    for (final row in data)
+      colunas.map((coluna) => _escaparCsv(valorCelula(row, coluna))).join(','),
+  ];
+  return linhas.join('\r\n');
+}
+
 /// Porte de `TablegridComponent` (core/commom-views/tablegrid/tablegrid.component.ts).
 ///
 /// Diferenças de design em relação ao original (Angular + PrimeNG `p-table`), por não haver
@@ -48,6 +126,9 @@ class TableGrid<T> extends PlatformWidget {
 
   final bool mostrarChkItem;
   final bool mostrarChkExcluidos;
+
+  /// Exibe no cabeçalho um botão para escolher colunas e exportar os dados em CSV.
+  final bool exportarCSV;
 
   /// Rótulo do filtro opcional exibido no rodapé da grade.
   final String rotuloChkExcluidos;
@@ -99,6 +180,7 @@ class TableGrid<T> extends PlatformWidget {
     this.cols = const [],
     this.mostrarChkItem = false,
     this.mostrarChkExcluidos = false,
+    this.exportarCSV = false,
     this.rotuloChkExcluidos = 'Mostrar Excluídos',
     this.chkExcluidosSelecionado = false,
     this.mostrarReativar = false,
@@ -266,6 +348,91 @@ class _TableGridBaseState<T> extends State<_TableGridBase<T>> {
     return atual.toString();
   }
 
+  Future<void> _abrirModalExportacao(
+    List<DynamicColumnDTO> colunasVisiveis,
+  ) async {
+    final colunasExportaveis = colunasVisiveis
+        .where((coluna) => coluna.type != TypeColunm.botao)
+        .toList();
+    final selecionadas = colunasExportaveis.toSet();
+
+    final confirmou = await showDialog<bool>(
+      context: context,
+      builder: (modalContext) => StatefulBuilder(
+        builder: (context, atualizarModal) => AlertDialog(
+          title: const Text('Exportar dados em CSV'),
+          content: SizedBox(
+            width: 420,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('Selecione as colunas que deseja exportar:'),
+                const SizedBox(height: 12),
+                Flexible(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        for (final coluna in colunasExportaveis)
+                          CheckboxListTile(
+                            key: ValueKey('csv-coluna-${coluna.field}'),
+                            value: selecionadas.contains(coluna),
+                            controlAffinity: ListTileControlAffinity.leading,
+                            contentPadding: EdgeInsets.zero,
+                            title: Text(coluna.title),
+                            onChanged: (marcada) => atualizarModal(() {
+                              if (marcada ?? false) {
+                                selecionadas.add(coluna);
+                              } else {
+                                selecionadas.remove(coluna);
+                              }
+                            }),
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(modalContext).pop(false),
+              child: const Text('Cancelar'),
+            ),
+            FilledButton.icon(
+              key: const ValueKey('tablegrid-exportar-confirmar'),
+              onPressed: selecionadas.isEmpty
+                  ? null
+                  : () => Navigator.of(modalContext).pop(true),
+              icon: const Icon(Icons.download_outlined),
+              label: const Text('Exportar'),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    if (confirmou != true) return;
+    await _exportarCsv(
+      colunasExportaveis.where(selecionadas.contains).toList(growable: false),
+    );
+  }
+
+  Future<void> _exportarCsv(List<DynamicColumnDTO> colunas) async {
+    final csv = gerarCsvTableGrid<T>(
+      data: parent.data,
+      colunas: colunas,
+      resolverCampo: (row, campo) => parent.campo(row, campo),
+    );
+    await FileSaver.instance.saveFile(
+      name: 'tablegrid_${DateTime.now().millisecondsSinceEpoch}',
+      bytes: Uint8List.fromList([0xEF, 0xBB, 0xBF, ...utf8.encode(csv)]),
+      fileExtension: 'csv',
+      mimeType: MimeType.csv,
+    );
+  }
+
   // ── Paginação (lazy, delegada ao pai) ─────────────────────────────────────
 
   int get _totalPaginas => parent.totalRegistros == 0
@@ -347,18 +514,35 @@ class _TableGridBaseState<T> extends State<_TableGridBase<T>> {
         children: [
           if (parent.mostrarExpansao) const SizedBox(width: 40),
           if (parent.mostrarChkItem) const SizedBox(width: 40),
-          for (final col in colunasVisiveis)
+          for (var indice = 0; indice < colunasVisiveis.length; indice++)
             _celulaContainer(
-              width: col.width,
-              child: Text(
-                col.title,
-                style:
-                    col.headerStyle ??
-                    TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 11,
-                      letterSpacing: 0.3,
+              width: colunasVisiveis[indice].width,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      colunasVisiveis[indice].title,
+                      style:
+                          colunasVisiveis[indice].headerStyle ??
+                          const TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 11,
+                            letterSpacing: 0.3,
+                          ),
                     ),
+                  ),
+                  if (parent.exportarCSV &&
+                      indice == colunasVisiveis.length - 1)
+                    Tooltip(
+                      message: 'Exportar CSV',
+                      child: IconButton(
+                        key: const ValueKey('tablegrid-exportar-csv'),
+                        visualDensity: VisualDensity.compact,
+                        icon: const Icon(Icons.download_outlined, size: 19),
+                        onPressed: () => _abrirModalExportacao(colunasVisiveis),
+                      ),
+                    ),
+                ],
               ),
             ),
         ],

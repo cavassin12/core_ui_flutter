@@ -1,6 +1,6 @@
 # TableGrid
 
-Componente único de tabela de dados (grade), com colunas dinâmicas, seleção de linhas, expansão de sub-grade, ações por linha, paginação delegada ao pai (modo "lazy") e um filtro opcional de "mostrar excluídos" — porte do `TablegridComponent` (Angular + PrimeNG `p-table`) do projeto original.
+Componente único de tabela de dados (grade), com colunas dinâmicas, seleção de linhas, exportação CSV, expansão de sub-grade, ações por linha, paginação delegada ao pai (modo "lazy") e um filtro opcional de "mostrar excluídos" — porte do `TablegridComponent` (Angular + PrimeNG `p-table`) do projeto original.
 
 Estende `PlatformWidget`, mas usa a mesma implementação em todas as plataformas (uma tabela densa de dados corporativos não tem uma variação visual nativa relevante entre Android/iOS/Web/Windows).
 
@@ -42,6 +42,13 @@ TableGrid<Usuario>(
 | `data`                | `List<T>`                                 | `[]`   | Linhas exibidas na grade principal.                                          |
 | `cols`                | `List<DynamicColumnDTO>`                  | `[]`   | Colunas da grade principal. Ver [DynamicColumnDTO](#dynamiccolumndto).       |
 | `resolverCampo`       | `dynamic Function(T row, String campo)?`  | `null` | Resolve o valor de um campo em uma linha. Padrão: só funciona com `Map<String, dynamic>`. |
+| `exportarCSV`          | `bool`                                      | `false` | Exibe na última coluna do cabeçalho o botão que abre a seleção de colunas e exporta os dados atuais em CSV. |
+
+Quando `exportarCSV` estiver ativo, todas as colunas visíveis de dados começam
+selecionadas no modal. Colunas do tipo `botao` são ignoradas. O arquivo usa
+UTF-8 com BOM e trata aspas, vírgulas e quebras de linha. Em grades com
+paginação lazy, são exportadas as linhas presentes em `data` (a página
+carregada), pois as demais páginas não estão disponíveis no componente.
 
 ### Seleção e reativação
 
@@ -175,6 +182,7 @@ TableGrid<Map<String, dynamic>>(
     DynamicColumnDTO(title: 'Ativo', field: 'dthrExclusao', type: TypeColunm.status, order: 1),
   ],
   mostrarChkItem: true,
+  exportarCSV: true,
   colunaExcluidos: 'dthrExclusao',
   mostrarReativar: true,
   mostrarPaginacao: true,
