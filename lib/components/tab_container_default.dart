@@ -389,10 +389,7 @@ class _TabContainerDefaultBaseState extends State<_TabContainerDefaultBase> {
           alignment: Alignment.topCenter,
           children: [...anteriores, ?atual],
         ),
-        child: KeyedSubtree(
-          key: ValueKey(_controlador.indice),
-          child: padding,
-        ),
+        child: KeyedSubtree(key: ValueKey(_controlador.indice), child: padding),
       ),
     );
   }

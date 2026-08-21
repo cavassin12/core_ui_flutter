@@ -213,7 +213,9 @@ class _AccordionDefaultBaseState extends State<_AccordionDefaultBase> {
     if (oldWidget.parent.itens.length != widget.parent.itens.length) {
       _chaves = List.generate(widget.parent.itens.length, (_) => GlobalKey());
       _abertos.removeWhere((index) => index >= widget.parent.itens.length);
-      _ordemAbertura.removeWhere((index) => index >= widget.parent.itens.length);
+      _ordemAbertura.removeWhere(
+        (index) => index >= widget.parent.itens.length,
+      );
     }
   }
 
@@ -272,8 +274,7 @@ class _AccordionDefaultBaseState extends State<_AccordionDefaultBase> {
       if (contexto == null) return;
       Scrollable.ensureVisible(
         contexto,
-        duration:
-            widget.parent.rolarParaSecaoAoAbrir == AccordionRolagem.rapida
+        duration: widget.parent.rolarParaSecaoAoAbrir == AccordionRolagem.rapida
             ? const Duration(milliseconds: 200)
             : const Duration(milliseconds: 500),
         curve: Curves.easeInOut,
@@ -311,8 +312,13 @@ class _AccordionDefaultBaseState extends State<_AccordionDefaultBase> {
     if (!aberto) _rolarParaSecao(index);
   }
 
-  Color _corFundoCabecalho(AccordionItem item, bool aberto, BuildContext context) {
-    final fechado = item.corFundoCabecalho ??
+  Color _corFundoCabecalho(
+    AccordionItem item,
+    bool aberto,
+    BuildContext context,
+  ) {
+    final fechado =
+        item.corFundoCabecalho ??
         widget.parent.corFundoCabecalho ??
         Theme.of(context).colorScheme.primary;
     if (!aberto) return fechado;
@@ -321,8 +327,13 @@ class _AccordionDefaultBaseState extends State<_AccordionDefaultBase> {
         fechado;
   }
 
-  Color _corBordaCabecalho(AccordionItem item, bool aberto, BuildContext context) {
-    final fechado = item.corBordaCabecalho ??
+  Color _corBordaCabecalho(
+    AccordionItem item,
+    bool aberto,
+    BuildContext context,
+  ) {
+    final fechado =
+        item.corBordaCabecalho ??
         widget.parent.corBordaCabecalho ??
         Theme.of(context).colorScheme.primary;
     if (!aberto) return fechado;
@@ -378,8 +389,7 @@ class _AccordionDefaultBaseState extends State<_AccordionDefaultBase> {
           children: [
             if (item.iconeEsquerdo != null) ...[
               AnimatedRotation(
-                turns:
-                    (aberto && widget.parent.inverterIconeEsquerdoSeAberto)
+                turns: (aberto && widget.parent.inverterIconeEsquerdoSeAberto)
                     ? 0.5
                     : 0,
                 duration: widget.parent.duracaoAnimacao,
@@ -390,8 +400,7 @@ class _AccordionDefaultBaseState extends State<_AccordionDefaultBase> {
             Expanded(child: item.cabecalho),
             const SizedBox(width: 8),
             AnimatedRotation(
-              turns:
-                  (aberto && widget.parent.inverterIconeDireitoSeAberto)
+              turns: (aberto && widget.parent.inverterIconeDireitoSeAberto)
                   ? 0.5
                   : 0,
               duration: widget.parent.duracaoAnimacao,
@@ -443,8 +452,11 @@ class _AccordionDefaultBaseState extends State<_AccordionDefaultBase> {
       tween: Tween(begin: 0.96, end: 1.0),
       duration: widget.parent.duracaoAnimacao,
       curve: widget.parent.curvaAnimacao,
-      builder: (context, valor, filho) =>
-          Transform.scale(scale: valor, alignment: Alignment.topCenter, child: filho),
+      builder: (context, valor, filho) => Transform.scale(
+        scale: valor,
+        alignment: Alignment.topCenter,
+        child: filho,
+      ),
       child: animado,
     );
   }
@@ -454,10 +466,7 @@ class _AccordionDefaultBaseState extends State<_AccordionDefaultBase> {
     return Column(
       key: _chaves[index],
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        _buildCabecalho(index, aberto),
-        _buildConteudo(index, aberto),
-      ],
+      children: [_buildCabecalho(index, aberto), _buildConteudo(index, aberto)],
     );
   }
 
@@ -491,7 +500,10 @@ class _AccordionDefaultBaseState extends State<_AccordionDefaultBase> {
     if (widget.parent.desabilitarRolagem) {
       return Padding(
         padding: padding,
-        child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: filhos),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: filhos,
+        ),
       );
     }
 

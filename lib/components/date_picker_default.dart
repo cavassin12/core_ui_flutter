@@ -162,7 +162,9 @@ class _DatePickerDefaultBaseState extends State<_DatePickerDefaultBase> {
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController(text: widget.parent.formatar(widget.parent.valor));
+    _controller = TextEditingController(
+      text: widget.parent.formatar(widget.parent.valor),
+    );
   }
 
   @override
@@ -180,7 +182,8 @@ class _DatePickerDefaultBaseState extends State<_DatePickerDefaultBase> {
     super.dispose();
   }
 
-  bool get _estaDesabilitado => widget.parent.disabled || widget.parent.readonly;
+  bool get _estaDesabilitado =>
+      widget.parent.disabled || widget.parent.readonly;
 
   String? _internalValidator(DateTime? valor) {
     final Map<String, dynamic> errors = {};
@@ -188,9 +191,11 @@ class _DatePickerDefaultBaseState extends State<_DatePickerDefaultBase> {
     if (widget.parent.required && valor == null) {
       errors['required'] = true;
     } else if (valor != null) {
-      if (widget.parent.dataMinima != null && valor.isBefore(widget.parent.dataMinima!)) {
+      if (widget.parent.dataMinima != null &&
+          valor.isBefore(widget.parent.dataMinima!)) {
         errors['min'] = true;
-      } else if (widget.parent.dataMaxima != null && valor.isAfter(widget.parent.dataMaxima!)) {
+      } else if (widget.parent.dataMaxima != null &&
+          valor.isAfter(widget.parent.dataMaxima!)) {
         errors['max'] = true;
       }
     }

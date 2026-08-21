@@ -185,7 +185,10 @@ class DialogDefault extends PlatformWidget {
     );
   }
 
-  Widget _buildCabecalhoPadrao(BuildContext context, {required bool cupertino}) {
+  Widget _buildCabecalhoPadrao(
+    BuildContext context, {
+    required bool cupertino,
+  }) {
     if (titulo == null && !exibirBotaoFechar) return const SizedBox.shrink();
     final design = context.design;
     return Container(
@@ -208,7 +211,8 @@ class DialogDefault extends PlatformWidget {
             )
           else
             const Spacer(),
-          if (exibirBotaoFechar) _buildBotaoFechar(context, cupertino: cupertino),
+          if (exibirBotaoFechar)
+            _buildBotaoFechar(context, cupertino: cupertino),
         ],
       ),
     );
@@ -283,9 +287,7 @@ class DialogDefault extends PlatformWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 cabecalhoWidget,
-                Flexible(
-                  child: rolavel ? conteudoRolavel : corpoComPadding,
-                ),
+                Flexible(child: rolavel ? conteudoRolavel : corpoComPadding),
                 ?rodapeWidget,
               ],
             ),

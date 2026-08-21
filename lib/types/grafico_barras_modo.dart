@@ -1,0 +1,1 @@
+enum GraficoBarrasModo { agrupado, empilhado }

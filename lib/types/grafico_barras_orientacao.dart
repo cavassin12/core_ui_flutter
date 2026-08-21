@@ -1,0 +1,1 @@
+enum GraficoBarrasOrientacao { vertical, horizontal }

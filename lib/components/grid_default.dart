@@ -239,9 +239,7 @@ class GridLinha extends PlatformWidget {
     return GridQuebra.xs;
   }
 
-  List<List<_ColunaResolvida>> _quebrarEmLinhas(
-    List<_ColunaResolvida> itens,
-  ) {
+  List<List<_ColunaResolvida>> _quebrarEmLinhas(List<_ColunaResolvida> itens) {
     final linhas = <List<_ColunaResolvida>>[];
     var linhaAtual = <_ColunaResolvida>[];
     var somaAtual = 0;
@@ -314,9 +312,7 @@ class GridLinha extends PlatformWidget {
         final quebra = _resolverQuebra(largura);
 
         final resolvidas = filhos.map((filho) {
-          final coluna = filho is GridColuna
-              ? filho
-              : GridColuna(filho: filho);
+          final coluna = filho is GridColuna ? filho : GridColuna(filho: filho);
           return _ColunaResolvida(
             coluna,
             coluna._resolverColunas(quebra) ?? 0,

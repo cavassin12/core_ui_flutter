@@ -34,6 +34,22 @@ class NavbarDefault extends PlatformWidget implements PreferredSizeWidget {
   final Color? corTexto;
   final Color? corItemAtivo;
   final double? altura;
+
+  /// Centraliza o conteúdo da navbar dentro de uma largura máxima, mantendo
+  /// o fundo da barra ocupando toda a largura disponível.
+  ///
+  /// Equivale ao `.container` dentro de uma `.navbar` do Bootstrap. Defina
+  /// como `false` para recuperar o comportamento fluido (`.container-fluid`).
+  final bool usarContainer;
+
+  /// Largura máxima do conteúdo quando [usarContainer] é `true`.
+  ///
+  /// O valor padrão acompanha aproximadamente o container `xxl` do Bootstrap.
+  final double larguraMaxima;
+
+  /// Espaçamento interno aplicado depois da limitação de largura. Assim, em
+  /// telas menores que [larguraMaxima], marca e ações continuam afastadas das
+  /// bordas da viewport.
   final EdgeInsetsGeometry padding;
   final bool elevado;
 
@@ -47,9 +63,11 @@ class NavbarDefault extends PlatformWidget implements PreferredSizeWidget {
     this.corTexto,
     this.corItemAtivo,
     this.altura,
+    this.usarContainer = true,
+    this.larguraMaxima = 1320,
     this.padding = const EdgeInsets.symmetric(horizontal: 16),
     this.elevado = false,
-  });
+  }) : assert(larguraMaxima > 0, 'larguraMaxima deve ser maior que zero');
 
   @override
   Size get preferredSize => Size.fromHeight(altura ?? 56);
@@ -60,49 +78,56 @@ class NavbarDefault extends PlatformWidget implements PreferredSizeWidget {
     final texto = corTexto ?? design.corNavbarTexto;
     final ativo = corItemAtivo ?? design.corPrimaria;
 
+    final conteudo = Padding(
+      padding: padding,
+      child: Row(
+        children: [
+          if (marca != null) ...[
+            DefaultTextStyle.merge(
+              style: TextStyle(
+                color: texto,
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+              ),
+              child: marca!,
+            ),
+            const SizedBox(width: 20),
+          ],
+          Expanded(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  for (final item in itens)
+                    _NavbarItem(item: item, corTexto: texto, corAtiva: ativo),
+                  ...itensCustomizados,
+                ],
+              ),
+            ),
+          ),
+          if (acoes.isNotEmpty) ...[
+            const SizedBox(width: 12),
+            Row(mainAxisSize: MainAxisSize.min, children: acoes),
+          ],
+        ],
+      ),
+    );
+
+    final conteudoResponsivo = usarContainer
+        ? Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: larguraMaxima),
+              child: SizedBox(width: double.infinity, child: conteudo),
+            ),
+          )
+        : conteudo;
+
     return Material(
       color: fundo,
       elevation: elevado ? 2 : 0,
       child: SizedBox(
         height: altura ?? design.alturaNavbar,
-        child: Padding(
-          padding: padding,
-          child: Row(
-            children: [
-              if (marca != null) ...[
-                DefaultTextStyle.merge(
-                  style: TextStyle(
-                    color: texto,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                  ),
-                  child: marca!,
-                ),
-                const SizedBox(width: 20),
-              ],
-              Expanded(
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      for (final item in itens)
-                        _NavbarItem(
-                          item: item,
-                          corTexto: texto,
-                          corAtiva: ativo,
-                        ),
-                      ...itensCustomizados,
-                    ],
-                  ),
-                ),
-              ),
-              if (acoes.isNotEmpty) ...[
-                const SizedBox(width: 12),
-                Row(mainAxisSize: MainAxisSize.min, children: acoes),
-              ],
-            ],
-          ),
-        ),
+        child: conteudoResponsivo,
       ),
     );
   }

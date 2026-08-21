@@ -25,40 +25,40 @@ class DropdownItemDefault {
     this.onTap,
     this.active = false,
     this.disabled = false,
-  })  : isDivider = false,
-        isHeader = false,
-        isText = false;
+  }) : isDivider = false,
+       isHeader = false,
+       isText = false;
 
   const DropdownItemDefault.divider()
-      : label = null,
-        icone = null,
-        iconeDefault = null,
-        onTap = null,
-        active = false,
-        disabled = false,
-        isDivider = true,
-        isHeader = false,
-        isText = false;
+    : label = null,
+      icone = null,
+      iconeDefault = null,
+      onTap = null,
+      active = false,
+      disabled = false,
+      isDivider = true,
+      isHeader = false,
+      isText = false;
 
   const DropdownItemDefault.header(String texto)
-      : label = texto,
-        icone = null,
-        iconeDefault = null,
-        onTap = null,
-        active = false,
-        disabled = false,
-        isDivider = false,
-        isHeader = true,
-        isText = false;
+    : label = texto,
+      icone = null,
+      iconeDefault = null,
+      onTap = null,
+      active = false,
+      disabled = false,
+      isDivider = false,
+      isHeader = true,
+      isText = false;
 
   const DropdownItemDefault.texto(String texto)
-      : label = texto,
-        icone = null,
-        iconeDefault = null,
-        onTap = null,
-        active = false,
-        disabled = false,
-        isDivider = false,
-        isHeader = false,
-        isText = true;
+    : label = texto,
+      icone = null,
+      iconeDefault = null,
+      onTap = null,
+      active = false,
+      disabled = false,
+      isDivider = false,
+      isHeader = false,
+      isText = true;
 }

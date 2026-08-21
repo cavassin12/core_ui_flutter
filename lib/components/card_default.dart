@@ -218,7 +218,9 @@ class CardDefault extends PlatformWidget {
     final children = <Widget>[];
     for (var i = 0; i < itens.length; i++) {
       if (i > 0) {
-        children.add(Divider(height: 1, thickness: 1, color: corBordaResolvida));
+        children.add(
+          Divider(height: 1, thickness: 1, color: corBordaResolvida),
+        );
       }
       children.add(
         Padding(

@@ -58,10 +58,12 @@ class CheckboxDefault extends PlatformWidget {
   // Um checkbox não tem uma variação visual nativa relevante entre
   // plataformas — a mesma implementação é usada em todas.
   @override
-  Widget createAndroidWidget(BuildContext context) => _CheckboxDefaultBase(parent: this);
+  Widget createAndroidWidget(BuildContext context) =>
+      _CheckboxDefaultBase(parent: this);
 
   @override
-  Widget createIosWidget(BuildContext context) => _CheckboxDefaultBase(parent: this);
+  Widget createIosWidget(BuildContext context) =>
+      _CheckboxDefaultBase(parent: this);
 }
 
 // =============================================================================
@@ -91,7 +93,8 @@ class _CheckboxDefaultBaseState extends State<_CheckboxDefaultBase> {
   @override
   void initState() {
     isChecked = widget.parent.isChecked ?? false;
-    animationDuration = widget.parent.animationDuration ?? Duration(milliseconds: 500);
+    animationDuration =
+        widget.parent.animationDuration ?? Duration(milliseconds: 500);
     size = widget.parent.size ?? 40.0;
     checkedColor = widget.parent.checkedColor ?? Colors.green;
     uncheckedColor = widget.parent.uncheckedColor;
@@ -105,7 +108,8 @@ class _CheckboxDefaultBaseState extends State<_CheckboxDefaultBase> {
   @override
   void didUpdateWidget(_CheckboxDefaultBase oldWidget) {
     uncheckedColor =
-        widget.parent.uncheckedColor ?? Theme.of(context).scaffoldBackgroundColor;
+        widget.parent.uncheckedColor ??
+        Theme.of(context).scaffoldBackgroundColor;
     if (isChecked != widget.parent.isChecked) {
       isChecked = widget.parent.isChecked ?? false;
     }
@@ -127,7 +131,8 @@ class _CheckboxDefaultBaseState extends State<_CheckboxDefaultBase> {
           widget.parent.checkedWidget ?? Icon(Icons.check, color: Colors.white);
     }
     if (uncheckedWidget != widget.parent.uncheckedWidget) {
-      uncheckedWidget = widget.parent.uncheckedWidget ?? const SizedBox.shrink();
+      uncheckedWidget =
+          widget.parent.uncheckedWidget ?? const SizedBox.shrink();
     }
     super.didUpdateWidget(oldWidget);
   }
@@ -148,7 +153,8 @@ class _CheckboxDefaultBaseState extends State<_CheckboxDefaultBase> {
                 width: size,
                 decoration: BoxDecoration(
                   color: isChecked! ? checkedColor : uncheckedColor,
-                  border: widget.parent.border ?? Border.all(color: borderColor),
+                  border:
+                      widget.parent.border ?? Border.all(color: borderColor),
                   borderRadius: borderRadius,
                 ),
                 child: isChecked! ? checkedWidget : uncheckedWidget,
@@ -162,7 +168,9 @@ class _CheckboxDefaultBaseState extends State<_CheckboxDefaultBase> {
               height: size,
               width: size,
               decoration: BoxDecoration(
-                color: widget.parent.disabledColor ?? Theme.of(context).disabledColor,
+                color:
+                    widget.parent.disabledColor ??
+                    Theme.of(context).disabledColor,
                 border:
                     widget.parent.border ??
                     Border.all(

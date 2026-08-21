@@ -69,7 +69,10 @@ class ProgressBarDefault extends PlatformWidget {
     final raio = raioBorda ?? design.raioBorda;
 
     final rotuloTexto =
-        rotulo ?? (exibirPercentual && valor != null ? '${(valor! * 100).round()}%' : null);
+        rotulo ??
+        (exibirPercentual && valor != null
+            ? '${(valor! * 100).round()}%'
+            : null);
 
     final barra = ClipRRect(
       borderRadius: BorderRadius.circular(raio),

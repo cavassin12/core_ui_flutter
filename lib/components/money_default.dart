@@ -101,7 +101,8 @@ class MoneyDefault extends PlatformWidget {
     'max': 'O valor é maior que o máximo permitido.',
   };
 
-  static String _apenasDigitos(String texto) => texto.replaceAll(RegExp(r'[^0-9]'), '');
+  static String _apenasDigitos(String texto) =>
+      texto.replaceAll(RegExp(r'[^0-9]'), '');
 
   /// Converte uma string de dígitos (representando a menor unidade
   /// monetária — ex.: centavos, conforme [casasDecimais]) para o valor
@@ -130,9 +131,16 @@ class MoneyDefault extends PlatformWidget {
       d = d.padLeft(casasDecimais + 1, '0');
     }
 
-    final parteInteira = casasDecimais > 0 ? d.substring(0, d.length - casasDecimais) : d;
-    final parteDecimal = casasDecimais > 0 ? d.substring(d.length - casasDecimais) : '';
-    final parteInteiraAgrupada = _agruparMilhares(parteInteira, separadorMilhar);
+    final parteInteira = casasDecimais > 0
+        ? d.substring(0, d.length - casasDecimais)
+        : d;
+    final parteDecimal = casasDecimais > 0
+        ? d.substring(d.length - casasDecimais)
+        : '';
+    final parteInteiraAgrupada = _agruparMilhares(
+      parteInteira,
+      separadorMilhar,
+    );
 
     return casasDecimais > 0
         ? '$parteInteiraAgrupada$separadorDecimal$parteDecimal'
@@ -177,7 +185,9 @@ class MoneyDefault extends PlatformWidget {
       return errorMessages![chave];
     }
     if (errors[chave] is String) return errors[chave] as String;
-    if (defaultErrorMessages.containsKey(chave)) return defaultErrorMessages[chave];
+    if (defaultErrorMessages.containsKey(chave)) {
+      return defaultErrorMessages[chave];
+    }
     return 'Campo inválido.';
   }
 
@@ -212,7 +222,10 @@ class _MoneyInputFormatter extends TextInputFormatter {
   _MoneyInputFormatter(this.parent);
 
   @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
     final digitos = MoneyDefault._apenasDigitos(newValue.text);
 
     final texto = MoneyDefault.formatarDigitos(
@@ -222,7 +235,10 @@ class _MoneyInputFormatter extends TextInputFormatter {
       separadorDecimal: parent.separadorDecimal,
     );
 
-    return TextEditingValue(text: texto, selection: TextSelection.collapsed(offset: texto.length));
+    return TextEditingValue(
+      text: texto,
+      selection: TextSelection.collapsed(offset: texto.length),
+    );
   }
 }
 
@@ -252,7 +268,9 @@ class _MoneyDefaultBaseState extends State<_MoneyDefaultBase> {
     if (widget.parent.controller != null) {
       _controller = widget.parent.controller!;
     } else {
-      _controller = TextEditingController(text: widget.parent.formatarValor(widget.parent.initialValue));
+      _controller = TextEditingController(
+        text: widget.parent.formatarValor(widget.parent.initialValue),
+      );
       _isInternalController = true;
     }
 
@@ -314,7 +332,10 @@ class _MoneyDefaultBaseState extends State<_MoneyDefaultBase> {
         ),
         children: [
           if (widget.parent.required)
-            const TextSpan(text: ' *', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+            const TextSpan(
+              text: ' *',
+              style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+            ),
         ],
       ),
     );
@@ -324,19 +345,26 @@ class _MoneyDefaultBaseState extends State<_MoneyDefaultBase> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isIos = widget.platform == TargetPlatform.iOS;
-    final temPrefixo = widget.parent.prefixo != null && widget.parent.prefixo!.isNotEmpty;
+    final temPrefixo =
+        widget.parent.prefixo != null && widget.parent.prefixo!.isNotEmpty;
 
     final inputDecoration = InputDecoration(
       label: widget.parent.label.isNotEmpty ? _buildLabelWidget(context) : null,
-      hintText: widget.parent.placeholder.isNotEmpty ? widget.parent.placeholder : null,
+      hintText: widget.parent.placeholder.isNotEmpty
+          ? widget.parent.placeholder
+          : null,
       prefixText: temPrefixo ? '${widget.parent.prefixo} ' : null,
       filled: widget.parent.disabled || widget.parent.readonly,
       fillColor: widget.parent.disabled
           ? theme.disabledColor.withValues(alpha: 0.08)
-          : (widget.parent.readonly ? theme.colorScheme.surfaceContainerHighest : null),
+          : (widget.parent.readonly
+                ? theme.colorScheme.surfaceContainerHighest
+                : null),
       contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
       alignLabelWithHint: true,
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(isIos ? 8.0 : 6.0)),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(isIos ? 8.0 : 6.0),
+      ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(isIos ? 8.0 : 6.0),
         borderSide: BorderSide(color: theme.dividerColor),
@@ -364,7 +392,10 @@ class _MoneyDefaultBaseState extends State<_MoneyDefaultBase> {
           onChanged: _handleChanged,
           validator: _internalValidator,
           decoration: inputDecoration,
-          style: TextStyle(fontSize: 14, color: theme.textTheme.bodyLarge?.color),
+          style: TextStyle(
+            fontSize: 14,
+            color: theme.textTheme.bodyLarge?.color,
+          ),
         ),
       ),
     );

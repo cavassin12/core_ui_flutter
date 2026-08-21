@@ -128,7 +128,9 @@ class PaginationDefault extends PlatformWidget {
     final corFundo = ativo ? design.corPrimaria : Colors.transparent;
     final corTexto = ativo
         ? Colors.white
-        : (habilitado ? theme.textTheme.bodyMedium?.color : theme.disabledColor);
+        : (habilitado
+              ? theme.textTheme.bodyMedium?.color
+              : theme.disabledColor);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 2),

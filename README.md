@@ -129,6 +129,10 @@ Todos os componentes abaixo são exportados por `package:core_ui_flutter/core_ui
 | **DialogDefault** | Dialog/modal no estilo Bootstrap: tamanhos, centralização, rolagem, backdrop estático, fechamento por ESC/clique fora e variante tela-cheia. | [doc/dialog_default.md](doc/dialog_default.md) |
 | **DropdownDefault** | Dropdown no estilo Bootstrap: botão trigger, direção down/up, itens com ícone/ativo/desabilitado, divisores, cabeçalhos, tamanhos, variante dark e auto-close configurável. | [doc/dropdown_default.md](doc/dropdown_default.md) |
 | **GridLinha / GridColuna** | Sistema de grid responsivo de 12 colunas, com breakpoints, colunas automáticas, offset e reordenação — equivalente a `row`/`col-*` do Bootstrap. | [doc/grid_default.md](doc/grid_default.md) |
+| **GraficoLinhaDefault** | Séries temporais ou comparativas com pontos, área, grade, tooltip e seleção. | [doc/graficos_default.md](doc/graficos_default.md) |
+| **GraficoBarrasDefault** | Barras agrupadas ou empilhadas, nas orientações vertical e horizontal. | [doc/graficos_default.md](doc/graficos_default.md) |
+| **GraficoRoscaDefault** | Distribuição em rosca ou pizza, com percentuais, legenda e conteúdo central. | [doc/graficos_default.md](doc/graficos_default.md) |
+| **GraficoIndicadorDefault** | Indicador semicircular com limites, faixas semânticas e formatação de valor. | [doc/graficos_default.md](doc/graficos_default.md) |
 | **IconeDefaultComponent** | Resolve e exibe um ícone a partir de várias formas de entrada: catálogo padrão, `IconData` direto, ou nome de ícone Lucide em texto. | [doc/icone_default_component.md](doc/icone_default_component.md) |
 | **InputDefault** | Campo de texto com validação embutida (obrigatório, e-mail, min/max), máscara simples, normalização de números e alternância de senha. | [doc/input_default.md](doc/input_default.md) |
 | **MoneyDefault** | Campo de valores monetários com máscara em tempo real, casas decimais e separadores de milhar/decimal configuráveis. | [doc/money_default.md](doc/money_default.md) |

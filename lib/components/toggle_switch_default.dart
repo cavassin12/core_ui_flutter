@@ -284,7 +284,9 @@ class _ToggleSwitchDefaultBaseState extends State<_ToggleSwitchDefaultBase> {
       return personalizados[index];
     }
 
-    final cor = ativo ? widget.parent.corTextoAtivo : widget.parent.corTextoInativo;
+    final cor = ativo
+        ? widget.parent.corTextoAtivo
+        : widget.parent.corTextoInativo;
     final icones = widget.parent.icones;
     final icone = (icones != null && index < icones.length)
         ? icones[index]
@@ -323,11 +325,7 @@ class _ToggleSwitchDefaultBaseState extends State<_ToggleSwitchDefaultBase> {
     );
   }
 
-  Widget _buildOpcao(
-    int index,
-    double raio, {
-    required bool mostrarDivisor,
-  }) {
+  Widget _buildOpcao(int index, double raio, {required bool mostrarDivisor}) {
     final ativo = _selecionado == index;
     return GestureDetector(
       onTap: () => _aoTocar(index),
@@ -357,7 +355,13 @@ class _ToggleSwitchDefaultBaseState extends State<_ToggleSwitchDefaultBase> {
     );
   }
 
-  Widget _buildIndicador(double raio, double esquerda, double topo, double largura, double altura) {
+  Widget _buildIndicador(
+    double raio,
+    double esquerda,
+    double topo,
+    double largura,
+    double altura,
+  ) {
     if (_selecionado == null) return const SizedBox.shrink();
     return AnimatedPositioned(
       duration: widget.parent.animar
@@ -432,9 +436,8 @@ class _ToggleSwitchDefaultBaseState extends State<_ToggleSwitchDefaultBase> {
 
   Widget _buildLargurasFixas(int total, double raio) {
     final larguras = widget.parent.largurasPersonalizadas!;
-    double larguraDe(int index) => index < larguras.length
-        ? larguras[index]
-        : widget.parent.larguraMinima;
+    double larguraDe(int index) =>
+        index < larguras.length ? larguras[index] : widget.parent.larguraMinima;
 
     final offsets = <double>[];
     var acumulado = 0.0;
@@ -465,14 +468,10 @@ class _ToggleSwitchDefaultBaseState extends State<_ToggleSwitchDefaultBase> {
                 : widget.parent.altura,
           ),
           Flex(
-            direction: widget.parent.vertical
-                ? Axis.vertical
-                : Axis.horizontal,
+            direction: widget.parent.vertical ? Axis.vertical : Axis.horizontal,
             children: List.generate(total, (index) {
               return SizedBox(
-                width: widget.parent.vertical
-                    ? maiorLargura
-                    : larguraDe(index),
+                width: widget.parent.vertical ? maiorLargura : larguraDe(index),
                 height: widget.parent.vertical
                     ? larguraDe(index)
                     : widget.parent.altura,

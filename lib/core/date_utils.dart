@@ -10,7 +10,9 @@ library;
 String toUtcLocal(String? dateString) {
   if (dateString == null || dateString.trim().isEmpty) return '';
 
-  final match = RegExp(r'^(\d{4})-(\d{2})-(\d{2})').firstMatch(dateString.trim());
+  final match = RegExp(
+    r'^(\d{4})-(\d{2})-(\d{2})',
+  ).firstMatch(dateString.trim());
   if (match == null) return '';
 
   final year = match.group(1)!;
@@ -29,7 +31,9 @@ String toUtcLocalDateTime(String? dateString) {
   final raw = dateString.trim();
   if (raw.isEmpty) return '';
 
-  final normalized = raw.replaceAll(RegExp(r'\[[^\]]+\]$'), '').replaceFirst(' ', 'T');
+  final normalized = raw
+      .replaceAll(RegExp(r'\[[^\]]+\]$'), '')
+      .replaceFirst(' ', 'T');
 
   DateTime date;
   try {
