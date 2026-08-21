@@ -1,3 +1,4 @@
+import 'package:core_ui_flutter/code_design_system_theme.dart';
 import 'package:core_ui_flutter/components/icone_default_component.dart';
 import 'package:core_ui_flutter/core/platform_widget.dart';
 import 'package:core_ui_flutter/types/button_severity.dart';
@@ -8,6 +9,10 @@ import 'package:flutter/material.dart';
 
 class ButtonDefault extends PlatformWidget {
   static const double _alturaPadrao = 30.0;
+  static const Color _corInfo = Color(0xFF0284C7);
+  static const Color _corSucesso = Color(0xFF16A34A);
+  static const Color _corAviso = Color(0xFFD97706);
+  static const Color _corErro = Color(0xFFDC2626);
 
   final IconData? icone;
   final IconesDefault? iconeDefault;
@@ -94,19 +99,23 @@ class ButtonDefault extends PlatformWidget {
   /// Resolve a cor de fundo com base na severidade e no tema do aplicativo
   Color _resolveBackgroundColor(BuildContext context) {
     final theme = Theme.of(context);
+    if (tipo == TipoBotao.defaultType || tipo == TipoBotao.xDefault) {
+      return theme.colorScheme.surfaceContainerHighest;
+    }
+
     switch (severity) {
       case ButtonSeverity.danger:
-        return theme.colorScheme.error;
+        return _corErro;
       case ButtonSeverity.warn:
-        return Colors.orange.shade700;
+        return _corAviso;
       case ButtonSeverity.success:
-        return const Color(0xFF22C55E); // Verde padrão PrimeNG
+        return _corSucesso;
       case ButtonSeverity.info:
-        return const Color(0xFF3B82F6); // Azul padrão PrimeNG
+        return _corInfo;
       case ButtonSeverity.secondary:
         return theme.colorScheme.secondary;
       case ButtonSeverity.primary:
-        return theme.colorScheme.primary;
+        return context.design.corPrimaria;
     }
   }
 
@@ -212,7 +221,9 @@ class ButtonDefault extends PlatformWidget {
         borderRadius: BorderRadius.circular(isSmall ? 6.0 : 8.0),
         minimumSize: Size(0, heightResolved ?? 30.0),
         onPressed: disabled ? null : _handleTap,
-        child: _buildContent(disabled ? textColor.withValues(alpha: 0.5) : textColor),
+        child: _buildContent(
+          disabled ? textColor.withValues(alpha: 0.5) : textColor,
+        ),
       ),
     );
   }

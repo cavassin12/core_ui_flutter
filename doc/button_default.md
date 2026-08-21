@@ -72,11 +72,12 @@ Quando o tamanho é pequeno (variantes sem `x`), a altura padrão passa a ser `2
 
 | Severidade   | Cor de fundo                              |
 |---------------|--------------------------------------------|
-| `primary`      | cor primária do tema (`Theme.colorScheme.primary`) |
-| `danger`       | `Theme.colorScheme.error`                  |
-| `warn`         | `Colors.orange.shade700`                   |
-| `success`      | `#22C55E`                                  |
-| `info`         | `#3B82F6`                                  |
+| `default`      | `Theme.colorScheme.surfaceContainerHighest` |
+| `primary`      | `context.design.corPrimaria`               |
+| `danger`       | `#DC2626`                                  |
+| `warn`         | `#D97706`                                  |
+| `success`      | `#16A34A`                                  |
+| `info`         | `#0284C7`                                  |
 | `secondary`    | `Theme.colorScheme.secondary`              |
 
 ### Cor do texto/ícone

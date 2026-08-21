@@ -43,7 +43,7 @@ TableGrid<Usuario>(
 | `cols`                | `List<DynamicColumnDTO>`                  | `[]`   | Colunas da grade principal. Ver [DynamicColumnDTO](#dynamiccolumndto).       |
 | `resolverCampo`       | `dynamic Function(T row, String campo)?`  | `null` | Resolve o valor de um campo em uma linha. Padrão: só funciona com `Map<String, dynamic>`. |
 
-### Seleção, exclusão e reativação
+### Seleção e reativação
 
 | Parâmetro              | Tipo                     | Padrão                            | Descrição                                                                 |
 |--------------------------|----------------------------|-------------------------------------|------------------------------------------------------------------------------|
@@ -53,28 +53,18 @@ TableGrid<Usuario>(
 | `rotuloChkExcluidos`        | `String`                    | `'Mostrar Excluídos'`               | Rótulo ao lado do switch acima.                                              |
 | `chkExcluidosSelecionado`   | `bool`                      | `false`                             | Estado controlado do switch acima.                                           |
 | `aoChkExcluidos`            | `void Function(bool)?`      | `null`                              | Chamado quando o switch acima muda de estado.                                |
-| `colunaExcluidos`           | `String`                    | `''`                                | Nome do campo (via `resolverCampo`) que indica exclusão — `null`/ausente = ativo, qualquer outro valor = excluído (ex.: uma coluna `dthrExclusao`). Usado para colorir a linha, e para decidir quando mostrar as ações de excluir/visualizar/editar/... vs. reativar. |
+| `colunaExcluidos`           | `String`                    | `''`                                | Nome do campo (via `resolverCampo`) que indica exclusão - `null`/ausente = ativo, qualquer outro valor = excluído (ex.: uma coluna `dthrExclusao`). Usado para colorir a linha e exibir a ação de reativar quando habilitada. |
 | `mostrarReativar`           | `bool`                      | `false`                             | Exibe a ação de reativar (só aparece em linhas marcadas como excluídas, se `colunaExcluidos` estiver definido). |
 | `aoReativar`                | `void Function(T row)?`     | `null`                              | Chamado ao tocar na ação de reativar.                                        |
 
-### Ações padrão por linha
+### Ações por linha
 
 | Parâmetro          | Tipo                 | Padrão   | Descrição                                                                 |
 |-----------------------|------------------------|----------|------------------------------------------------------------------------------|
-| `mostrarVisualizar`      | `bool`                  | `false`  | Exibe a ação de visualizar (também é disparada ao tocar em qualquer parte da linha). |
-| `aoVisualizar`            | `void Function(T)?`    | `null`   | Chamado ao visualizar uma linha.                                            |
-| `mostrarEditar`           | `bool`                  | `false`  | Exibe a ação de editar.                                                     |
-| `aoEditar`                | `void Function(T)?`    | `null`   | Chamado ao tocar em editar.                                                 |
-| `mostrarExcluir`          | `bool`                  | `false`  | Exibe a ação de excluir, com diálogo de confirmação (`mensagemConfirmacaoExclusao`). |
-| `aoExcluir`               | `void Function(T)?`    | `null`   | Chamado somente após o usuário confirmar a exclusão no diálogo.             |
-| `mensagemConfirmacaoExclusao` | `String`          | `'Confirma a exclusão deste registro?'` | Mensagem do diálogo de confirmação de exclusão.               |
-| `mostrarDownload`         | `bool`                  | `false`  | Exibe a ação de baixar arquivo.                                             |
-| `aoDownload`              | `void Function(T)?`    | `null`   | Chamado ao tocar em baixar.                                                 |
-| `mostrarUpload`           | `bool`                  | `false`  | Exibe a ação de carregar arquivo.                                           |
-| `aoUpload`                | `void Function(T)?`    | `null`   | Chamado ao tocar em carregar.                                               |
-| `acoesLinha`              | `List<TableAction<T>>` | `[]`     | Ações customizadas adicionais, exibidas **antes** das ações padrão acima. Ver [TableAction](#tableaction). |
+| `aoVisualizar`            | `void Function(T)?`    | `null`   | Chamado ao tocar em qualquer parte de uma linha.                            |
+| `acoesLinha`              | `List<TableAction<T>>` | `[]`     | Ações customizadas exibidas na coluna `TypeColunm.botao`. Ver [TableAction](#tableaction). |
 
-Todas as ações "padrão" (visualizar/editar/upload/download) respeitam `colunaExcluidos`: se a linha estiver marcada como excluída, essas ações somem e só a de reativar (se habilitada) aparece.
+Os botões padrão de visualizar, editar, excluir, upload e download não fazem parte do `TableGrid`. Para ações específicas de domínio, use `acoesLinha`. A ação de reativar permanece disponível para linhas excluídas quando `mostrarReativar` estiver habilitado.
 
 ### Paginação (lazy)
 
@@ -185,9 +175,6 @@ TableGrid<Map<String, dynamic>>(
     DynamicColumnDTO(title: 'Ativo', field: 'dthrExclusao', type: TypeColunm.status, order: 1),
   ],
   mostrarChkItem: true,
-  mostrarVisualizar: true,
-  mostrarEditar: true,
-  mostrarExcluir: true,
   colunaExcluidos: 'dthrExclusao',
   mostrarReativar: true,
   mostrarPaginacao: true,
@@ -195,8 +182,6 @@ TableGrid<Map<String, dynamic>>(
   totalPorPag: 20,
   lazyLoadDados: (evento) => buscarPagina(evento.first, evento.rows),
   aoVisualizar: (row) => abrirDetalhes(row),
-  aoEditar: (row) => abrirEdicao(row),
-  aoExcluir: (row) => excluirNoBackend(row),
   aoReativar: (row) => reativarNoBackend(row),
   aoSelecionados: (selecionados) => print('${selecionados.length} selecionados'),
 )
