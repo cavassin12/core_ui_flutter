@@ -1,10 +1,8 @@
 import 'package:core_ui_flutter/components/icone_default_component.dart';
 import 'package:core_ui_flutter/core/platform_widget.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class InputDefault extends PlatformWidget {
   final String label;
@@ -359,7 +357,7 @@ class _InputDefaultBaseState extends State<_InputDefaultBase> {
       suffixIcon: suffixIconWidget,
       filled: widget.parent.disabled || widget.parent.readonly,
       fillColor: widget.parent.disabled
-          ? theme.disabledColor.withOpacity(0.08)
+          ? theme.disabledColor.withValues(alpha: 0.08)
           : (widget.parent.readonly
                 ? theme.colorScheme.surfaceContainerHighest
                 : null),

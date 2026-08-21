@@ -213,18 +213,22 @@ class _DropdownDefaultBaseState extends State<_DropdownDefaultBase> {
 
   Color _resolveBackgroundColor(BuildContext context) {
     final design = context.design;
-    final theme = Theme.of(context);
+    final tipo = widget.parent.tipo;
+    if (tipo == TipoBotao.defaultType || tipo == TipoBotao.xDefault) {
+      return design.corSuperficie;
+    }
+
     switch (_severity) {
       case ButtonSeverity.danger:
-        return theme.colorScheme.error;
+        return design.corErro;
       case ButtonSeverity.warn:
-        return Colors.orange.shade700;
+        return design.corAviso;
       case ButtonSeverity.success:
-        return const Color(0xFF22C55E);
+        return design.corSucesso;
       case ButtonSeverity.info:
-        return const Color(0xFF3B82F6);
+        return design.corInfo;
       case ButtonSeverity.secondary:
-        return theme.colorScheme.secondary;
+        return design.corSecundaria;
       case ButtonSeverity.primary:
         return design.corPrimaria;
     }
@@ -233,9 +237,9 @@ class _DropdownDefaultBaseState extends State<_DropdownDefaultBase> {
   Color _resolveTextColor(BuildContext context) {
     final tipo = widget.parent.tipo;
     if (tipo == TipoBotao.defaultType || tipo == TipoBotao.xDefault) {
-      return Theme.of(context).colorScheme.onSurface;
+      return context.design.corTexto;
     }
-    return Colors.white;
+    return context.design.corPrimariaContraste;
   }
 
   // ---------------------------------------------------------------------------
@@ -243,7 +247,8 @@ class _DropdownDefaultBaseState extends State<_DropdownDefaultBase> {
   // ---------------------------------------------------------------------------
 
   OverlayEntry _buildOverlayEntry() {
-    final renderBox = _triggerKey.currentContext!.findRenderObject() as RenderBox;
+    final renderBox =
+        _triggerKey.currentContext!.findRenderObject() as RenderBox;
     final triggerSize = renderBox.size;
     final isUp = widget.parent.direcao == DropdownDirectionDefault.up;
 
@@ -252,7 +257,8 @@ class _DropdownDefaultBaseState extends State<_DropdownDefaultBase> {
         return Focus(
           autofocus: true,
           onKeyEvent: (node, event) {
-            if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.escape) {
+            if (event is KeyDownEvent &&
+                event.logicalKey == LogicalKeyboardKey.escape) {
               _closeMenu();
               return KeyEventResult.handled;
             }
@@ -287,8 +293,11 @@ class _DropdownDefaultBaseState extends State<_DropdownDefaultBase> {
     final design = context.design;
     final isDark = widget.parent.dark;
 
-    final bgColor = isDark ? const Color(0xFF343A40) : theme.colorScheme.surface;
-    final width = widget.parent.menuWidth ??
+    final bgColor = isDark
+        ? const Color(0xFF343A40)
+        : theme.colorScheme.surface;
+    final width =
+        widget.parent.menuWidth ??
         (triggerSize.width < 180.0 ? 180.0 : triggerSize.width);
 
     return Material(
@@ -296,7 +305,11 @@ class _DropdownDefaultBaseState extends State<_DropdownDefaultBase> {
       borderRadius: BorderRadius.circular(design.raioBorda),
       color: bgColor,
       child: ConstrainedBox(
-        constraints: BoxConstraints(minWidth: width, maxWidth: 320, maxHeight: 320),
+        constraints: BoxConstraints(
+          minWidth: width,
+          maxWidth: 320,
+          maxHeight: 320,
+        ),
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(vertical: 4),
           child: Column(
@@ -311,7 +324,11 @@ class _DropdownDefaultBaseState extends State<_DropdownDefaultBase> {
     );
   }
 
-  Widget _buildMenuItem(BuildContext context, DropdownItemDefault item, bool isDark) {
+  Widget _buildMenuItem(
+    BuildContext context,
+    DropdownItemDefault item,
+    bool isDark,
+  ) {
     final theme = Theme.of(context);
 
     if (item.isDivider) {
@@ -351,13 +368,16 @@ class _DropdownDefaultBaseState extends State<_DropdownDefaultBase> {
     final Color corConteudo = item.active
         ? Colors.white
         : (item.disabled
-            ? (isDark ? Colors.white30 : theme.disabledColor)
-            : (isDark ? Colors.white : (theme.textTheme.bodyMedium?.color ?? Colors.black)));
+              ? (isDark ? Colors.white30 : theme.disabledColor)
+              : (isDark
+                    ? Colors.white
+                    : (theme.textTheme.bodyMedium?.color ?? Colors.black)));
 
     return InkWell(
       onTap: item.disabled ? null : () => _handleItemTap(item),
-      hoverColor:
-          isDark ? Colors.white.withValues(alpha: 0.08) : design.corPrimaria.withValues(alpha: 0.08),
+      hoverColor: isDark
+          ? Colors.white.withValues(alpha: 0.08)
+          : design.corPrimaria.withValues(alpha: 0.08),
       child: Container(
         color: corFundo,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -396,7 +416,8 @@ class _DropdownDefaultBaseState extends State<_DropdownDefaultBase> {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (widget.parent.icone != null || widget.parent.iconeDefault != null) ...[
+        if (widget.parent.icone != null ||
+            widget.parent.iconeDefault != null) ...[
           IconeDefaultComponent(
             icone: widget.parent.icone,
             iconeDefault: widget.parent.iconeDefault,
@@ -453,7 +474,9 @@ class _DropdownDefaultBaseState extends State<_DropdownDefaultBase> {
 
     if (widget.platform == TargetPlatform.fuchsia) {
       button = MouseRegion(
-        cursor: disabled ? SystemMouseCursors.forbidden : SystemMouseCursors.click,
+        cursor: disabled
+            ? SystemMouseCursors.forbidden
+            : SystemMouseCursors.click,
         child: button,
       );
     }

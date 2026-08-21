@@ -51,10 +51,10 @@ class AppBarDefault extends PlatformWidget implements PreferredSizeWidget {
   /// `Navigator.pop()` padrão.
   final VoidCallback? aoVoltar;
 
-  /// Cor de fundo da barra. Usa `context.design.corPrimaria` quando omitida.
+  /// Cor de fundo da barra. Usa `context.design.corNavbar` quando omitida.
   final Color? corFundo;
 
-  /// Cor do título/ícones/ações. Usa `Colors.white` quando omitida.
+  /// Cor do título/ícones/ações. Usa `context.design.corNavbarTexto` quando omitida.
   final Color? corTexto;
 
   /// Elevação/sombra da barra (Android/Web/Windows). No iOS, qualquer valor
@@ -126,8 +126,8 @@ class AppBarDefault extends PlatformWidget implements PreferredSizeWidget {
   @override
   Widget createAndroidWidget(BuildContext context) {
     final design = context.design;
-    final bg = corFundo ?? design.corPrimaria;
-    final fg = corTexto ?? Colors.white;
+    final bg = corFundo ?? design.corNavbar;
+    final fg = corTexto ?? design.corNavbarTexto;
 
     return AppBar(
       backgroundColor: bg,
@@ -146,8 +146,8 @@ class AppBarDefault extends PlatformWidget implements PreferredSizeWidget {
   @override
   Widget createIosWidget(BuildContext context) {
     final design = context.design;
-    final bg = corFundo ?? design.corPrimaria;
-    final fg = corTexto ?? Colors.white;
+    final bg = corFundo ?? design.corNavbar;
+    final fg = corTexto ?? design.corNavbarTexto;
 
     final navBar = CupertinoNavigationBar(
       backgroundColor: bg,
@@ -155,7 +155,9 @@ class AppBarDefault extends PlatformWidget implements PreferredSizeWidget {
       leading: _buildLeadingCupertino(context),
       middle: DefaultTextStyle.merge(
         style: TextStyle(color: fg, fontWeight: FontWeight.w600),
-        child: tituloWidget ?? (titulo != null ? Text(titulo!) : const SizedBox.shrink()),
+        child:
+            tituloWidget ??
+            (titulo != null ? Text(titulo!) : const SizedBox.shrink()),
       ),
       trailing: acoes != null && acoes!.isNotEmpty
           ? Row(mainAxisSize: MainAxisSize.min, children: acoes!)
@@ -167,9 +169,6 @@ class AppBarDefault extends PlatformWidget implements PreferredSizeWidget {
 
     if (bottom == null) return navBar;
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [navBar, bottom!],
-    );
+    return Column(mainAxisSize: MainAxisSize.min, children: [navBar, bottom!]);
   }
 }

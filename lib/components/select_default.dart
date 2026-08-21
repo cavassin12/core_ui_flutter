@@ -3,7 +3,6 @@ import 'package:core_ui_flutter/core/platform_widget.dart';
 import 'package:core_ui_flutter/types/icones_default.dart';
 import 'package:core_ui_flutter/types/tipo_botao.dart';
 import 'package:flutter/material.dart';
-import 'package:lucide_icons/lucide_icons.dart';
 
 class SelectDefault extends PlatformWidget {
   final List<dynamic> options;

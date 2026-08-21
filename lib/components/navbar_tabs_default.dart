@@ -43,7 +43,7 @@ class NavbarTabsDefault extends PlatformWidget {
 
   Widget _build(BuildContext context) {
     final design = context.design;
-    final texto = corTexto ?? Theme.of(context).colorScheme.onSurface;
+    final texto = corTexto ?? design.corTexto;
     final ativa = corAtiva ?? design.corPrimaria;
 
     return Container(

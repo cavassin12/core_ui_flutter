@@ -189,7 +189,7 @@ class _NavbarDropdownBaseState extends State<_NavbarDropdownBase> {
         ? Colors.white
         : item.disabled
         ? theme.disabledColor
-        : theme.colorScheme.onSurface;
+        : design.corTexto;
     return InkWell(
       onTap: item.disabled
           ? null
@@ -223,8 +223,7 @@ class _NavbarDropdownBaseState extends State<_NavbarDropdownBase> {
   @override
   Widget build(BuildContext context) {
     final design = context.design;
-    final corBase =
-        widget.parent.corTexto ?? Theme.of(context).colorScheme.onSurface;
+    final corBase = widget.parent.corTexto ?? design.corNavbarTexto;
     final corAtiva = widget.parent.corAtiva ?? design.corPrimaria;
     final cor = widget.parent.disabled
         ? corBase.withValues(alpha: 0.38)

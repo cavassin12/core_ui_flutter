@@ -9,10 +9,6 @@ import 'package:flutter/material.dart';
 
 class ButtonDefault extends PlatformWidget {
   static const double _alturaPadrao = 30.0;
-  static const Color _corInfo = Color(0xFF0284C7);
-  static const Color _corSucesso = Color(0xFF16A34A);
-  static const Color _corAviso = Color(0xFFD97706);
-  static const Color _corErro = Color(0xFFDC2626);
 
   final IconData? icone;
   final IconesDefault? iconeDefault;
@@ -98,22 +94,22 @@ class ButtonDefault extends PlatformWidget {
 
   /// Resolve a cor de fundo com base na severidade e no tema do aplicativo
   Color _resolveBackgroundColor(BuildContext context) {
-    final theme = Theme.of(context);
+    final design = context.design;
     if (tipo == TipoBotao.defaultType || tipo == TipoBotao.xDefault) {
-      return theme.colorScheme.surfaceContainerHighest;
+      return design.corSuperficie;
     }
 
     switch (severity) {
       case ButtonSeverity.danger:
-        return _corErro;
+        return design.corErro;
       case ButtonSeverity.warn:
-        return _corAviso;
+        return design.corAviso;
       case ButtonSeverity.success:
-        return _corSucesso;
+        return design.corSucesso;
       case ButtonSeverity.info:
-        return _corInfo;
+        return design.corInfo;
       case ButtonSeverity.secondary:
-        return theme.colorScheme.secondary;
+        return design.corSecundaria;
       case ButtonSeverity.primary:
         return context.design.corPrimaria;
     }
@@ -125,11 +121,10 @@ class ButtonDefault extends PlatformWidget {
 
     // Se o botão for secundário ou padrão, usa cor do tema
     if (tipo == TipoBotao.defaultType || tipo == TipoBotao.xDefault) {
-      return Theme.of(context).colorScheme.onSurface;
+      return context.design.corTexto;
     }
 
-    // Padrão: Texto branco/contraste com o fundo do botão
-    return Colors.white;
+    return context.design.corPrimariaContraste;
   }
 
   /// Handler de clique

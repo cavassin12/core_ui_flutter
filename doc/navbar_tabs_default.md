@@ -22,4 +22,4 @@ Defina `pills: true` para a variante arredondada `.nav-pills`. Cada `NavbarTabIt
 | `aoTrocar` | `ValueChanged<int>?` | `null` | Recebe o índice escolhido. |
 | `pills` | `bool` | `false` | Alterna entre `.nav-tabs` e `.nav-pills`. |
 | `corAtiva` | `Color?` | `context.design.corPrimaria` | Cor do indicador ou fundo da aba ativa. |
-| `corTexto` | `Color?` | `Theme.colorScheme.onSurface` | Cor base dos rótulos. |
+| `corTexto` | `Color?` | `context.design.corTexto` | Cor base dos rótulos. |

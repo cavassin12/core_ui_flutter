@@ -26,10 +26,10 @@ Scaffold(
 | `itens` | `List<NavbarItemDefault>` | `[]` | Links do menu principal. Em telas estreitas, podem ser rolados horizontalmente. |
 | `itensCustomizados` | `List<Widget>` | `[]` | Itens adicionais no fluxo principal, como `NavbarDropdownDefault`. |
 | `acoes` | `List<Widget>` | `[]` | Widgets fixados à direita, como avatar, notificações ou `NavbarDropdownDefault`. |
-| `corFundo` | `Color?` | `context.design.corFundo` | Fundo da barra. |
-| `corTexto` | `Color?` | `Theme.colorScheme.onSurface` | Cor dos textos e ícones. |
+| `corFundo` | `Color?` | `context.design.corNavbar` | Fundo da barra. |
+| `corTexto` | `Color?` | `context.design.corNavbarTexto` | Cor dos textos e ícones. |
 | `corItemAtivo` | `Color?` | `context.design.corPrimaria` | Cor do item selecionado. |
-| `altura` | `double` | `56` | Altura da barra. |
+| `altura` | `double?` | `context.design.alturaNavbar` | Altura da barra. |
 | `elevado` | `bool` | `false` | Exibe sombra inferior sutil. |
 
 `NavbarItemDefault` recebe `texto`, `icone`, `ativo`, `disabled` e `aoTocar`.

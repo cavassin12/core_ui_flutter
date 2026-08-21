@@ -20,6 +20,16 @@ abstract class PlatformWidget extends StatelessWidget {
     return createAndroidWidget(context);
   }
 
+  /// Por padrão preserva o comportamento histórico do ecossistema Apple.
+  Widget createMacosWidget(BuildContext context) {
+    return createIosWidget(context);
+  }
+
+  /// Linux é uma plataforma desktop e reutiliza o widget do Windows.
+  Widget createLinuxWidget(BuildContext context) {
+    return createWindowsWidget(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     // 1. VALIDAÇÃO DE WEB: Sempre deve vir primeiro!
@@ -32,13 +42,20 @@ abstract class PlatformWidget extends StatelessWidget {
       return createWindowsWidget(context);
     }
 
-    // 3. VALIDAÇÃO ECOSSISTEMA APPLE (iOS / macOS)
-    if (defaultTargetPlatform == TargetPlatform.iOS ||
-        defaultTargetPlatform == TargetPlatform.macOS) {
+    // 3. VALIDAÇÃO DAS DEMAIS PLATAFORMAS DESKTOP
+    if (defaultTargetPlatform == TargetPlatform.macOS) {
+      return createMacosWidget(context);
+    }
+    if (defaultTargetPlatform == TargetPlatform.linux) {
+      return createLinuxWidget(context);
+    }
+
+    // 4. VALIDAÇÃO IOS
+    if (defaultTargetPlatform == TargetPlatform.iOS) {
       return createIosWidget(context);
     }
 
-    // 4. PADRÃO / FALLBACK (Android, Linux, Fuchsia, etc.)
+    // 5. PADRÃO / FALLBACK (Android, Fuchsia, etc.)
     return createAndroidWidget(context);
   }
 }

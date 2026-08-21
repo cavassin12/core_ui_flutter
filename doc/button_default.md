@@ -72,17 +72,17 @@ Quando o tamanho é pequeno (variantes sem `x`), a altura padrão passa a ser `2
 
 | Severidade   | Cor de fundo                              |
 |---------------|--------------------------------------------|
-| `default`      | `Theme.colorScheme.surfaceContainerHighest` |
+| `default`      | `context.design.corSuperficie`              |
 | `primary`      | `context.design.corPrimaria`               |
-| `danger`       | `#DC2626`                                  |
-| `warn`         | `#D97706`                                  |
-| `success`      | `#16A34A`                                  |
-| `info`         | `#0284C7`                                  |
-| `secondary`    | `Theme.colorScheme.secondary`              |
+| `danger`       | `context.design.corErro`                  |
+| `warn`         | `context.design.corAviso`                 |
+| `success`      | `context.design.corSucesso`               |
+| `info`         | `context.design.corInfo`                  |
+| `secondary`    | `context.design.corSecundaria`            |
 
 ### Cor do texto/ícone
 
-Por padrão, botões `defaultType`/`xDefault` usam `Theme.colorScheme.onSurface` (contraste com fundo neutro); as demais severidades usam branco. Use `corTexto` para sobrepor esse cálculo em qualquer caso.
+Por padrão, botões `defaultType`/`xDefault` usam `context.design.corTexto`; as demais severidades usam `context.design.corPrimariaContraste`. Use `corTexto` para sobrepor esse cálculo em qualquer caso.
 
 ---
 

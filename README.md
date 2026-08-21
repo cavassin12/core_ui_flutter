@@ -1,5 +1,12 @@
 # core_ui_flutter
 
+## Autenticação compartilhada
+
+`CoreAuthGrapheus` oferece três modelos obrigatoriamente selecionados por
+`CoreAuthGrapheusModel`, com layouts específicos para mobile e desktop. A
+integração HTTP é feita pelo callback `aoEntrar`, pronto para ser conectado ao
+`ApiService`. Consulte [doc/core_auth_grapheus.md](doc/core_auth_grapheus.md).
+
 Pacote Flutter (não é um app) com um design system de UI compartilhado, consumido por outros apps via dependência git. Disponibiliza widgets adaptativos por plataforma (Android, iOS/macOS, Web, Windows) e uma extensão de tema (`ThemeExtension`) para os tokens visuais compartilhados.
 
 ---
@@ -42,15 +49,13 @@ class MeuApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'App com Design System',
-      theme: ThemeData(
-        // Injetando as configurações do pacote no tema do app
-        extensions: const [
-          CoreDesignSystemTheme(
-            corPrimaria: Color(0xFF6200EE), // Roxo customizado
-            corFundo: Color(0xFFF5F5F5),    // Cinza claro
-            raioBorda: 12.0,                // Botões/cards mais arredondados
-          ),
-        ],
+      theme: const CoreDesignSystemTheme(
+        corPrimaria: Color(0xFF6200EE),
+        corFundo: Color(0xFFF5F5F5),
+        raioBorda: 12.0,
+      ).criarThemeData(),
+      darkTheme: CoreDesignSystemTheme.escuro.criarThemeData(
+        brightness: Brightness.dark,
       ),
       home: const MinhaTela(),
     );
@@ -58,23 +63,31 @@ class MeuApp extends StatelessWidget {
 }
 ```
 
-> **Importante:** o `CoreDesignSystemTheme` deve ser declarado com `const` dentro de `extensions` para evitar recriações desnecessárias do tema.
+Para usar a paleta padrão sem customização, basta informar `theme: CoreDesignSystemTheme.claro.criarThemeData()`.
 
 ---
 
 ## `CoreDesignSystemTheme`
 
-Classe que define os tokens visuais compartilhados do design system (`lib/code_design_system_theme.dart`), registrada como uma extensão do `ThemeData` do Flutter.
+Classe que define os tokens visuais compartilhados do design system (`lib/code_design_system_theme.dart`). `criarThemeData()` monta o `ThemeData`, o `ColorScheme` e a extensão automaticamente.
 
 | Propriedade            | Tipo     | Padrão do fallback | Descrição                                                          |
 |--------------------------|----------|----------------------|--------------------------------------------------------------------|
-| `corPrimaria`              | `Color`   | `Colors.blue`         | Cor principal usada em botões, destaques e itens ativos.           |
-| `corFundo`                 | `Color`   | `Colors.white`        | Cor de fundo padrão de cards, dialogs e outros containers.         |
+| `corPrimaria`              | `Color`   | `#2563EB`         | Cor principal usada em botões, destaques e itens ativos.           |
+| `corFundo`                 | `Color`   | `#F8FAFC`        | Cor de fundo padrão de cards, dialogs e outros containers.         |
 | `raioBorda`                | `double`  | `8.0`                 | Raio dos cantos arredondados dos componentes.                      |
 | `corBorda`                 | `Color`   | `#E2E8F0`              | Borda de cards, tabelas e outros containers.                       |
 | `corCabecalhoTabela`       | `Color`   | `#F8FAFC`              | Fundo do cabeçalho de tabelas (`TableGrid`).                        |
 | `corLinhaSelecionada`      | `Color`   | `#DCE9FB`              | Fundo de uma linha de tabela selecionada.                           |
 | `corLinhaHover`            | `Color`   | `#F1F5F9`              | Fundo de uma linha de tabela em hover (plataformas com mouse).      |
+| `corSuperficie` / `corTexto` | `Color` | `#FFFFFF` / `#1F2937` | Superfície base e texto principal. |
+| `corTextoSecundario` / `corDesabilitada` | `Color` | `#64748B` / `#94A3B8` | Estados de menor ênfase e desabilitado. |
+| `corSecundaria`, `corSucesso`, `corInfo`, `corAviso`, `corErro` | `Color` | paleta semântica | Cores usadas por botões, alertas e estados. |
+| `corNavbar` / `corNavbarTexto` | `Color` | `#0F172A` / branco | Aparência padrão das barras de navegação. |
+| `corFundoHover` / `corFundoSelecionado` | `Color` | `#F1F5F9` / `#DCE9FB` | Estados de interação em listas e menus. |
+| `raioBordaPequeno` / `raioBordaGrande` | `double` | `6` / `12` | Raios auxiliares para componentes compactos ou destacados. |
+| `espacamentoPequeno` / `espacamentoMedio` / `espacamentoGrande` | `double` | `4` / `8` / `16` | Escala compartilhada de espaçamento. |
+| `alturaComponente` / `alturaNavbar` / `elevacao` | `double` | `40` / `56` / `0` | Dimensões e elevação padrão. |
 
 Apenas `corPrimaria`, `corFundo` e `raioBorda` são obrigatórios ao instanciar — os demais têm valores padrão.
 
@@ -84,8 +97,9 @@ Os componentes do pacote (e os do seu app) leem os tokens através da extensão 
 
 ```dart
 context.design.corPrimaria
-context.design.corFundo
-context.design.raioBorda
+context.design.corSucesso
+context.design.corNavbar
+context.design.espacamentoGrande
 ```
 
 > **Fallback automático:** se o `CoreDesignSystemTheme` não for registrado no `ThemeData` do app hospedeiro, os valores padrão da tabela acima são usados automaticamente — os componentes nunca quebram por falta de configuração de tema.

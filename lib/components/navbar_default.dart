@@ -33,7 +33,7 @@ class NavbarDefault extends PlatformWidget implements PreferredSizeWidget {
   final Color? corFundo;
   final Color? corTexto;
   final Color? corItemAtivo;
-  final double altura;
+  final double? altura;
   final EdgeInsetsGeometry padding;
   final bool elevado;
 
@@ -46,25 +46,25 @@ class NavbarDefault extends PlatformWidget implements PreferredSizeWidget {
     this.corFundo,
     this.corTexto,
     this.corItemAtivo,
-    this.altura = 56,
+    this.altura,
     this.padding = const EdgeInsets.symmetric(horizontal: 16),
     this.elevado = false,
   });
 
   @override
-  Size get preferredSize => Size.fromHeight(altura);
+  Size get preferredSize => Size.fromHeight(altura ?? 56);
 
   Widget _build(BuildContext context) {
     final design = context.design;
-    final fundo = corFundo ?? design.corFundo;
-    final texto = corTexto ?? Theme.of(context).colorScheme.onSurface;
+    final fundo = corFundo ?? design.corNavbar;
+    final texto = corTexto ?? design.corNavbarTexto;
     final ativo = corItemAtivo ?? design.corPrimaria;
 
     return Material(
       color: fundo,
       elevation: elevado ? 2 : 0,
       child: SizedBox(
-        height: altura,
+        height: altura ?? design.alturaNavbar,
         child: Padding(
           padding: padding,
           child: Row(

@@ -188,9 +188,11 @@ O componente lê os seguintes tokens de `context.design` (`CoreDesignSystemTheme
 | Token         | Uso                                                          |
 |---------------|---------------------------------------------------------------|
 | `corPrimaria` | Cor de fundo do trigger com severidade `primary` e destaque dos itens `active` |
+| `corSuperficie` / `corTexto` | Fundo e texto das variantes `defaultType` / `xDefault` |
+| `corSecundaria`, `corSucesso`, `corInfo`, `corAviso`, `corErro` | Cores semânticas das demais severidades do trigger |
 | `raioBorda`   | Raio das bordas do trigger e do menu                          |
 
-Se o app hospedeiro não registrar `CoreDesignSystemTheme` no `ThemeData`, os valores padrão do fallback (`corPrimaria: Colors.blue`, `raioBorda: 8.0`) são usados.
+Se o app hospedeiro não registrar `CoreDesignSystemTheme` no `ThemeData`, os valores de `CoreDesignSystemTheme.claro` são usados.
 
 ---
 

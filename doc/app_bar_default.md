@@ -39,8 +39,8 @@ Scaffold(
 | `leading`              | `Widget?`                  | `null`             | Substitui totalmente o widget inicial (à esquerda), incluindo o botão de voltar automático. |
 | `exibirBotaoVoltar`    | `bool`                     | `true`             | Exibe um botão de voltar automático quando a rota atual pode ser desfeita (`Navigator.canPop`). Ignorado quando `leading` é informado. |
 | `aoVoltar`             | `VoidCallback?`            | `null`             | Chamado ao tocar no botão de voltar automático, no lugar do `Navigator.pop()` padrão. |
-| `corFundo`             | `Color?`                   | `context.design.corPrimaria` | Cor de fundo da barra.                                            |
-| `corTexto`             | `Color?`                   | `Colors.white`     | Cor do título/ícones/ações.                                                 |
+| `corFundo`             | `Color?`                   | `context.design.corNavbar` | Cor de fundo da barra.                                            |
+| `corTexto`             | `Color?`                   | `context.design.corNavbarTexto` | Cor do título/ícones/ações.                                      |
 | `elevacao`             | `double`                   | `0.0`              | Elevação/sombra da barra (Android/Web/Windows). No iOS, qualquer valor maior que zero apenas remove a borda transparente padrão. |
 | `centralizarTitulo`    | `bool`                     | `false`            | Centraliza o título no Android/Web/Windows. No iOS o título é sempre centralizado (comportamento nativo do `CupertinoNavigationBar`, não configurável). |
 | `bottom`               | `PreferredSizeWidget?`     | `null`             | Faixa opcional exibida abaixo da barra (ex.: abas). Ignorada no iOS — se precisar de abas no iOS, coloque-as no `body` da tela. |
