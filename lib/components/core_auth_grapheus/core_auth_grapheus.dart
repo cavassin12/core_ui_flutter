@@ -5,6 +5,7 @@ import 'package:core_ui_flutter/components/button_default.dart';
 import 'package:core_ui_flutter/components/card_default.dart';
 import 'package:core_ui_flutter/components/input_default.dart';
 import 'package:core_ui_flutter/core/platform_widget.dart';
+import 'package:core_ui_flutter/types/tipo_botao.dart';
 import 'package:flutter/material.dart';
 
 import 'core_auth_grapheus_credentials.dart';
@@ -381,6 +382,7 @@ class _CoreAuthGrapheusViewState extends State<_CoreAuthGrapheusView> {
               texto: config.textoGoogle,
               largura: double.infinity,
               altura: 46,
+              tipo: TipoBotao.defaultType,
             ),
             if (exibirCadastro && config.aoCriarConta != null) ...[
               const SizedBox(height: 18),

@@ -32,6 +32,19 @@ CoreAuthGrapheus(
 )
 ```
 
+Configure a identidade visual no aplicativo:
+
+```dart
+MaterialApp(
+  theme: GrapheusTheme.claro(modulo: GrapheusModulo.faturaPrime),
+  darkTheme: GrapheusTheme.escuro(modulo: GrapheusModulo.faturaPrime),
+  home: CoreAuthGrapheus(
+    modelo: CoreAuthGrapheusModel.cardCentral,
+    aoEntrar: autenticar,
+  ),
+)
+```
+
 O pacote não depende diretamente do `ApiService`. A integração ocorre pelo
 callback `aoEntrar`, permitindo que cada aplicativo use sua configuração de
 endpoint, interceptadores, armazenamento de token e tratamento de erros.
@@ -39,4 +52,4 @@ endpoint, interceptadores, armazenamento de token e tratamento de erros.
 `painelVisual` aceita qualquer widget, como `Image.asset` ou `Image.network`.
 Quando não informado, o componente usa um gradiente baseado no design system.
 O botão do Google é apenas visual e não executa autenticação nesta versão.
-
+Ele usa a superfície neutra do tema para não competir com a ação principal.

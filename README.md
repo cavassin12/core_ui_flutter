@@ -7,6 +7,14 @@
 integração HTTP é feita pelo callback `aoEntrar`, pronto para ser conectado ao
 `ApiService`. Consulte [doc/core_auth_grapheus.md](doc/core_auth_grapheus.md).
 
+## Identidade visual
+
+Use `GrapheusTheme.claro()` e `GrapheusTheme.escuro()` para aplicar as paletas,
+tipografia e destaques por módulo. A interface usa Inter, os títulos usam
+Manrope e valores técnicos podem usar `GrapheusTipografia.monoespacada()` com
+Roboto Mono. Consulte
+[doc/identidade_visual_grapheus.md](doc/identidade_visual_grapheus.md).
+
 Pacote Flutter (não é um app) com um design system de UI compartilhado, consumido por outros apps via dependência git. Disponibiliza widgets adaptativos por plataforma (Android, iOS/macOS, Web, Windows) e uma extensão de tema (`ThemeExtension`) para os tokens visuais compartilhados.
 
 ---

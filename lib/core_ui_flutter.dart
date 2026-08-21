@@ -47,3 +47,4 @@ export 'types/pagination_size_default.dart';
 export 'types/tab_container_borda.dart';
 export 'types/tipo_botao.dart';
 export 'types/type_colunm.dart';
+export 'themes/grapheus_theme.dart';
